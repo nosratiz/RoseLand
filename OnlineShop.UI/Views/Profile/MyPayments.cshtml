@@ -1,0 +1,46 @@
+﻿@using OnlineShop.Common.Helper
+@using OnlineShop.Common.Options
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.Shop.BankTransactions.ModelDto.BankTransactionDto>>
+@{
+    ViewData["Title"] = " پرداخت های من";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string url = "mypayment";
+}
+
+<div class="profile container level">
+    @await Component.InvokeAsync("ProfileSideBarComponent", new { url })
+
+    <div class="level-items">
+        <div class="result-container">
+            <h3>پرداخت های من</h3>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th class="no-wrap">شماره سفارش</th>
+                    <th class="no-wrap">وضعیت پرداخت</th>
+                    <th class="no-wrap">شماره پیگیری</th>
+                    <th class="no-wrap">تاریخ پرداخت</th>
+                    <th class="no-wrap">مبلغ</th>
+
+                </tr>
+                </thead>
+                @{ int rownumber = 1;}
+                <tbody>
+                    @foreach (var item in Model.Data.Items)
+                    {
+                        <tr>
+                            <td>@(rownumber++)</td>
+                            <td>@item.OrderNumber</td>
+                            <td>@(item.Status!= BankStatus.Success ? "ناموفق":"موفق")</td>
+                            <td>@item.RefId</td>
+                            <td>@DateTimeConvertor.LongPersianDate(@item.CreateDate)</td>
+                            <td>@item.Price.ToString("##,###") تومان</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

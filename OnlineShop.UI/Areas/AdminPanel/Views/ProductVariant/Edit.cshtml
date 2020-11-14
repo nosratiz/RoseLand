@@ -1,0 +1,118 @@
+﻿@model OnlineShop.Application.Shop.ProductVariants.ModelDto.ProductVariantViewModel
+
+@{
+    ViewData["Title"] = "ویرایش";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت تنوع محصولات</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="ProductVariant" asp-action="List">لیست تنوع محصولات</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">ویرایش تنوع</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="box">
+                @if (Model.ProductVariant.Success)
+                {
+                    <div class="box-header with-border">
+                        <form id="editVariantForm">
+                            <input type="hidden" id="id" name="id" value="@Model.ProductVariant.Data.Id" />
+                            <input type="hidden" id="productId" name="productId" value="@Model.ProductVariant.Data.ProductId" />
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                            <label>قیمت</label>
+                                            <div class="input-group">
+                                                <input type="number" id="price" name="price" class="form-control" placeholder="قیمت" onkeyup="PlusNumber(this);" value="@Model.ProductVariant.Data.Price">
+                                                <span class="input-group-append">
+                                                    <span class="input-group-text">تومان</span>
+                                                </span>
+                                            </div>
+                                            <span id="span-price" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                            <label>قیمت با تخفیف</label>
+                                            <div class="input-group">
+                                                <input type="number" id="discountprice" name="discountprice" value="@Model.ProductVariant.Data.DiscountPrice" onkeyup="LowerThan(this, price, 'قیمت تخفیف باید کوچکتر از قیمت محصول باشد');" class="form-control" placeholder="قیمت با تخفیف">
+                                                <span class="input-group-append">
+                                                    <span class="input-group-text">تومان</span>
+                                                </span>
+                                            </div>
+                                            <span id="span-discountprice" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                            <label>تعداد شاخه</label>
+                                            <div>
+                                                <input type="number" id="count" name="count" value="@Model.ProductVariant.Data.Count" onkeydown="PlusNumber(this);" class="form-control" placeholder="تعداد شاخه">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <label>نوع باکس</label>
+                                        <select name="boxType" asp-for="@Model.ProductVariant.Data.BoxType" id="boxType" class="form-control">
+                                            <option value="1">باکس چرمی</option>
+                                            <option value="2">باکس خوابیده</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12">
+                                        <div class="form-group">
+                                            <label>توضیحات</label>
+                                            <textarea rows="5" cols="5" asp-for="ProductVariant.Data.Description" class="form-control" placeholder="ناحیه متن"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="box-footer text-right">
+                                            <a asp-action="List" asp-route-productId="@Model.ProductVariant.Data.ProductId" type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                                <i class="ti-trash"></i> لغو
+                                            </a>
+                                            <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                                <i class="ti-save-alt"></i> ویرایش
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section script
+{
+    <script src="~/Admin/js/Validation.js"></script>
+    <script src="~/Admin/js/ProductVariant/VariantCommand.js"></script>
+
+
+}

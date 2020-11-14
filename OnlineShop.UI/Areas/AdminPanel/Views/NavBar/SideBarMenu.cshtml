@@ -1,0 +1,109 @@
+﻿
+<aside class="main-sidebar">
+    <!-- sidebar-->
+    <section class="sidebar">
+
+        <div class="user-profile">
+            <div class="ulogo">
+                <a asp-controller="Dashboard" asp-action="Index">
+                    <!-- logo for regular state and mobile devices -->
+                    <h2> رزلند لاکچری</h2>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- sidebar menu-->
+        <ul class="sidebar-menu" data-widget="tree">
+
+            <li>
+                <a asp-controller="Dashboard" asp-action="Index">
+                    <i class="ti-dashboard"></i>
+                    <span>داشبورد</span>
+                </a>
+            </li>
+            <li>
+                <a asp-controller="User" asp-action="Index">
+                    <i class="ti-user"></i>
+                    <span>مدیریت کاربران</span>
+                </a>
+
+            </li>
+
+            <li class="header nav-small-cap">فروشگاه</li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="ti-shopping-cart"></i> <span>مدیریت محصولات</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-right pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a asp-controller="ProductCategory" asp-action="ProductCategoryList"><i class="ti-more"></i>دسته بندی</a></li>
+                    <li><a asp-controller="Product" asp-action="List"><i class="ti-more"></i>محصولات</a></li>
+                    <li><a asp-controller="DiscountCode" asp-action="List"><i class="ti-more"></i>کد تخفیف</a></li>
+                </ul>
+            </li>
+            <li>
+                <a asp-controller="Order" asp-action="List">
+                    <i class="ti-receipt"></i>
+                    <span>سفارشات</span>
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Transaction" asp-action="TransactionList">
+                    <i class="ti-money"></i>
+                    <span>تراکنش های بانکی</span>
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Comment" asp-action="List">
+                    <i class="ti-comment"></i>
+                    <span>مدیریت نظرات</span>
+                </a>
+            </li>
+
+            <li class="header nav-small-cap">سایت</li>
+
+            <li>
+                <a asp-controller="Menu" asp-action="MenuList">
+                    <i class="ti-menu"></i>
+                    <span>مدیریت منو ها</span>
+                </a>
+            </li>
+            <li>
+                <a asp-controller="SlideShow" asp-action="List">
+                    <i class="ti-image"></i>
+                    <span>مدیریت اسلایدشو</span>
+                </a>
+            </li>
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="ti-archive"></i> <span>مدیریت محتوا</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-right pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a asp-controller="BlogCategory" asp-action="BlogCategoryList"><i class="ti-more"></i>دسته بندی</a></li>
+                    <li><a asp-controller="Blog" asp-action="BlogList"><i class="ti-more"></i>مقاله</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a asp-controller="ContactUs" asp-action="ContactUsList">
+                    <i class="ti-envelope"></i>
+                    <span>تماس با ما</span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="AppSetting" asp-action="AppSettings">
+                    <i class="ti-settings"></i>
+                    <span>تنظیمات</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</aside>

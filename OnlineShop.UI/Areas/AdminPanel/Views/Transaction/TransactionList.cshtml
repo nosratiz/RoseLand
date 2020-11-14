@@ -1,0 +1,206 @@
+﻿@using OnlineShop.Common.Helper
+@using OnlineShop.Common.Options
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.Shop.BankTransactions.ModelDto.BankTransactionDto>>
+@{
+    ViewData["Title"] = "لیست تراکنش های بانکی";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+    ViewBag.model = Model.Parameter;
+}
+<link rel="stylesheet" type="text/css" href="/assets/vendor_components/datatable/datatables.min.css" />
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت تراکنش ها</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">لیست تراکنش ها</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+
+                </div>
+                <!-- /.box-header -->
+
+                @if (Model.Data.Items.Any())
+                {
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <div class="dataTables_wrapper container-fluid dt-bootstrap4"></div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length">
+                                        <form asp-action="TransactionList" method="get">
+                                            <label>
+                                                جستجو:
+
+                                                <input name="search" type="search" class="form-control form-control-sm" />
+
+                                            </label>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+
+
+                                </div>
+                            </div>
+
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <th>شماره سفارش</th>
+                                        <th>مبلغ</th>
+                                        <th>شماره پیگیری</th>
+                                        <th>تاریخ </th>
+                                        <th>وضعیت پرداخت</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Data.Items)
+                                    {
+                                        <tr>
+
+                                            <td>@item.OrderNumber</td>
+                                            <td>@item.Price.ToString("##,###") تومان</td>
+                                            <td>@item.RefId</td>
+                                            <td>@DateTimeConvertor.LongPersianDate(item.CreateDate)</td>
+                                            <td><i class="@(item.Status==BankStatus.Success?"ti ti-check":"ti ti-close") "></i></td>
+                                            <td>
+                                                <button type="button" onclick="GetOrder(@item.OrderId)" class="btn btn-rounded btn-info btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">
+                                                    جزئیات تراکنش
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5">
+
+                                    <div class="dataTables_info" id="complex_header_info" role="status" aria-live="polite">نمایش@(((Model.Data.Meta.CurrentPage - 1) * Model.Data.Meta.ObjectInPage) + 1) تا @(Model.Data.Meta.CurrentPage * Model.Data.Meta.PageSize) از @Model.Data.Meta.TotalCount ورودی</div>
+                                </div>
+                                <div class="col-sm-12 col-md-7">
+                                    <partial name="_TransactionListPagination" model="Model.Data.Meta" />
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">فاکتور</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <table id="invoice-list" class="table table-hover no-wrap" data-page-size="10">
+                    <thead>
+                        <tr>
+                            <th> نام سفارش دهنده</th>
+                            <th> قیمت تمام شده</th>
+                            <th>قیمت حمل و نقل</th>
+                            <th>تاریخ تحوبل سفارش</th>
+                            <th>وضعیت سفارش</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="fullname"></td>
+                            <td id="finalamount"></td>
+                            <td id="shipmentprice"></td>
+                            <td id="deliveryDate"></td>
+                            <td id="status"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <div>
+                    آدرس:<p id="address"></p>
+                    <br />
+                    شماره تماس:<p id="mobile"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-rounded text-left" data-dismiss="modal">بستن</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+@section script
+{
+    <script src="~/assets/vendor_components/date-paginator/moment.min.js"></script>
+    <script>
+        const status = {
+            'لغو شده': 1,
+            'در انتظار تایید': 2,
+            'تایید شده': 3,
+            'در حال ارسال': 4,
+            'تحویل داده شده': 5,
+            'آماده پرداخت': 7
+        }
+
+        function getKeyByValue(object, value) {
+            return Object.keys(object).find(key => object[key] === value);
+        }
+
+
+        function GetOrder(id) {
+            $.ajax({
+                url: "/Adminapi/order/" + id,
+                type: "Get",
+                dataType: "json",
+                contentType: "application/json",
+                //contentType:"application/json",
+            }).done(data => {
+
+                $("#fullname").html(data.userAddress.user.fullName);
+                $("#finalamount").html(`${data.finalAmount.toLocaleString()} تومان`);
+                $("#shipmentprice").html(`${data.shipmentPrice.toLocaleString()} تومان`);
+
+
+                console.log();
+
+                $("#deliveryDate").html(``);
+                $("#status").html(`${getKeyByValue(status, data.orderStatus)}`);
+                $("#address").html(data.userAddress.address);
+                $("#mobile").html(data.userAddress.mobile);
+                $("#deliveryDate").html(data.deliveryDate);
+
+            }).fail(err => {
+
+            });
+        }
+
+
+    </script>
+}
+

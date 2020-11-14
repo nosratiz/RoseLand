@@ -1,0 +1,29 @@
+﻿@using OnlineShop.Common.Helper
+@model List<OnlineShop.Application.Shop.Comments.ModelDto.CommentDto>
+<div class="comments-container container">
+    <h2>نظرات</h2>
+    <div class="add-comment">
+        <textarea id="comment" class="comment-description"></textarea>
+        <div class="send-btn">
+            ارسال
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="items">
+                <div class="header">
+                    <span class="user-name">@item.User.FullName</span>
+                    <span class="date">@DateTimeConvertor.LongPersianDate(item.CreateDate)</span>
+                </div>
+                <div class="body-content">
+                    @item.Description
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+

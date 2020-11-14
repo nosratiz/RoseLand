@@ -1,0 +1,85 @@
+﻿@using OnlineShop.Common.Enum
+@using OnlineShop.Common.Helper
+@model OnlineShop.Application.Dashboard.ModelDto.UserDashboardViewModel
+
+@{
+    ViewData["Title"] = "پروفایل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string url = "profile";
+}
+
+<div class="profile container level">
+    @await Component.InvokeAsync("ProfileSideBarComponent", new {  url })
+    <div class="level-items">
+        <div class="user-information">
+            <h3>اطلاعات حساب کاربری</h3>
+            <table class="table fixed-layout">
+                <thead>
+                    <tr>
+                        <th>نام</th>
+                        <th>ایمیل</th>
+                        <th>شماره تماس</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                          @Model.User.Data.FullName
+                        </td>
+                        <td>
+                            @Model.User.Data.Email
+                        </td>
+                        <td>@Model.User.Data.PhoneNumber</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="result-container">
+            <h3>آخرین سفارشات</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ردیف</th>
+                        <th>شماره سفارش</th>
+                        <th>وضعیت سفارش</th>
+                        <th>قیمت تمام شده محصول</th>
+                        <th>تاریخ سفارش</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @{ int rownumber = 1;}
+                @if (Model.Orders.Any())
+                {
+                    @foreach (var item in Model.Orders)
+                    {
+                        <tr>
+                            <td>@(rownumber++)</td>
+                            <td>@item.OrderNumber</td>
+                            <td>@EnumConvertor.GetDisplayName(item.OrderStatus)</td>
+                            <td>@item.FinalAmount.ToString("##,###") تومان</td>
+                            <td>@item.CreateDate</td>
+                            <td>
+                                @if (item.OrderStatus == OrderStatus.ReadyForPay)
+                                {
+                                    <form method="POST" action="/payment">
+                                        <input type="hidden" value="@item.Id" name="orderId"/>
+                                        <button type="submit" class="submit-btn">پرداخت</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr >
+                        <td style="text-align: center;vertical-align: middle" colspan="6">در حال حاضر سفارش فعالی برای شما ثبت نشده است</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,183 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.Shop.Comments.ModelDto.CommentDto>>
+
+@{
+    ViewData["Title"] = "مدیریت نظرات";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+    ViewBag.model = Model.Parameter;
+}
+
+<link rel="stylesheet" type="text/css" href="/assets/vendor_components/datatable/datatables.min.css" />
+<link href="/assets/vendor_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت نظرات </h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">لیست نظرات</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+
+                </div>
+                @if (Model.Data.Items.Any())
+                {
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <div class="dataTables_wrapper container-fluid dt-bootstrap4"></div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length">
+                                        <form asp-action="List" method="get">
+                                            <label>
+                                                جستجو:
+
+                                                <input name="search" type="search" class="form-control form-control-sm" />
+
+                                            </label>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                </div>
+                            </div>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>نام</th>
+                                        <th> نام محصول</th>
+                                        <th>تاریخ </th>
+                                        <th>کامنت</th>
+                                        <th>وضعیت تایید </th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Data.Items)
+                                    {
+                                        <tr id="tr_@item.Id">
+
+
+                                            <td>@item.User.FullName</td>
+                                            <td>@item.Product.Name</td>
+                                            <td>@DateTimeConvertor.PersianDate(item.CreateDate)</td>
+                                            <td>@item.Description</td>
+
+                                            <td><i id="confrim_@item.Id" class="@(item.IsConfirm?"ti ti-check":"ti ti-close") "></i></td>
+                                            <td>
+                                                <div class="btn-group mb-5">
+                                                    <button type="button" class="btn btn-sm btn-dark dropdown-toggle" data-toggle="dropdown">عملیات</button>
+                                                    <div class="dropdown-menu">
+                                                        <a onclick="GetComment(@item.Id);" class="dropdown-item" data-toggle="modal" data-target="#modal-center" href="#">@(item.IsConfirm? "عدم تایید":"تایید") نظر</a>
+                                                        <a onclick="GetComment(@item.Id);" class="dropdown-item" data-toggle="modal" data-target="#modal-right">
+                                                            پاسخ دادن
+                                                        </a>
+                                                        <a class="dropdown-item" onclick='DeleteComment(@item.Id,"@item.User.FullName")'>حذف</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5">
+
+                                    <div class="dataTables_info" id="complex_header_info" role="status" aria-live="polite">
+                                        نمایش
+                                        @( ((Model.Data.Meta.CurrentPage - 1) * Model.Data.Meta.ObjectInPage) + 1) تا @(Model.Data.Meta.CurrentPage * Model.Data.Meta.PageSize) از @Model.Data.Meta.TotalCount ورودی
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-7">
+                                    <partial name="_ListPagination" model="Model.Data.Meta" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!-- /.box-header -->
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal modal-right fade" id="modal-right" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">پاسخ به کاربر</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mailbox-read-info bb-0 clearfix">
+                    <div class="left-float mr-5"></div>
+                    <h5 id="name" class="no-margin"> <br></h5>
+                    <div class="direct-chat-text">
+                        <p id="comment"></p>
+                    </div>
+                </div>
+                <label> پاسخ</label>
+                <input type="hidden" id="id" name="id" />
+                <textarea id="description" class="form-control"></textarea>
+            </div>
+            <div class="modal-footer modal-footer-uniform">
+                <button type="button" class="btn btn-rounded btn-secondary" data-dismiss="modal">بستن</button>
+                <button type="button" onclick="ReplyComment();" class="btn btn-rounded btn-primary float-right">پاسخ دادن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal center-modal fade" id="modal-center" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">تایید نظر</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmtxt"> </p>
+                <input type="hidden" id="commentId" name="commentId" />
+                <input type="hidden" id="isConfirm" name="isConfirm" />
+
+            </div>
+            <div class="modal-footer modal-footer-uniform">
+                <button type="button" class="btn btn-rounded btn-secondary" data-dismiss="modal">بستن</button>
+                <button type="button" onclick="confirmBtn();" id="confirmbtn" class="btn btn-rounded btn-primary float-right"> </button>
+            </div>
+        </div>
+    </div>
+</div>
+@section script
+{
+    <script src="/assets/vendor_components/sweetalert/sweetalert.min.js"></script>
+
+    <script src="~/Admin/js/Comment/CommentCommand.js"></script>
+
+}
+
+

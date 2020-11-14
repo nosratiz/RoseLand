@@ -1,0 +1,13 @@
+﻿@model List<OnlineShop.Application.General.BlogCategory.ModelDto.BlogCategoryDto>
+
+
+<div class="tags-container">
+    <h2 class="title">دسته بندی ها</h2>
+    <a asp-controller="Blog" asp-action="BlogList" class="items"><span class="tag">@Model.Sum(x => x.BlogCount)</span> کل مطالب</a>
+
+    @foreach (var category in Model)
+    {
+        <a asp-controller="Blog" asp-action="BlogList" asp-route-category="@category.Slug" class="items"><span class="tag">@category.BlogCount</span> @category.Name</a>
+    }
+
+</div>

@@ -1,0 +1,29 @@
+@using OnlineShop.Common.Helper
+@model List<OnlineShop.Application.General.Blog.ModelDto.BlogDto>
+
+
+    <div class="container news-container">
+        <div class="title-container">
+            <h1>وبلاگ</h1>
+        </div>
+        <div class="row level">
+            @foreach (var item in Model)
+            {
+            <div class="items">
+                <figure>
+                    <span class="date">@DateTimeConvertor.PersianDateTime(item.CreateDate)</span>
+                    <img src="@item.Image" alt="@item.Title" />
+                </figure>
+                <div class="caption">
+                    <h2 class="news-title">@item.Title</h2>
+                    <p class="news-description">
+                        @item.Description</p>
+                    <a asp-controller="Blog" asp-action="BlogDetail" asp-route-slug="@item.Slug" class="btn">بیشتر
+                        بخوانید</a>
+                </div>
+            </div>
+            }
+
+
+        </div>
+    </div>

@@ -1,0 +1,30 @@
+﻿@using OnlineShop.Application.Common.General
+@using OnlineShop.Common.Helper
+@model Meta
+
+@{
+    var result = BasePaginationViewModel.InitiatePagerViewModel(Model.TotalCount, Model.CurrentPage, Model.PageSize);
+    PagingOptions options = ViewBag.Model;
+    var parameter = new Dictionary<string, string>
+    {
+        {"Page", options.Page.ToString()},
+        {"Search" ,options.Search }
+    };
+}
+
+@if (result.TotalPageCount > 1)
+{
+    <nav class="pagination is-rounded" role="navigation" aria-label="pagination">
+
+        <ul class="pagination-list">
+        @if (result.EndPage > 1)
+        {
+            for (long pages = result.StartPage; pages <= result.EndPage; pages++)
+            {
+                parameter["Page"] = (pages).ToString();
+                <li><a asp-action="BlogList" asp-all-route-data="parameter" class="@(pages == Model.CurrentPage ?"pagination-link is-current" :"pagination-link")" aria-label="Goto page 1" aria-current="page">@pages</a></li>
+            }
+        }
+        </ul>
+    </nav>
+}

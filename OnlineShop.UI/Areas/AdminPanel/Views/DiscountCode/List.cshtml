@@ -1,0 +1,169 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.Shop.DiscountCodes.ModelDto.DiscountCodeDto>>
+@{
+    ViewData["Title"] = "لیست کد های تخفیف";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+
+    ViewBag.model = Model.Parameter;
+}
+
+<link rel="stylesheet" type="text/css" href="/assets/vendor_components/datatable/datatables.min.css" />
+<link href="/assets/vendor_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت تخفیفات </h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">لیست تخفیف ها</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+
+                </div>
+                @if (Model.Data.Items.Any())
+                {
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <div class="dataTables_wrapper container-fluid dt-bootstrap4"></div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length">
+                                        <form asp-action="List" method="get">
+                                            <label>
+                                                جستجو:
+
+                                                <input name="search" type="search" class="form-control form-control-sm" />
+
+                                            </label>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+
+                                    <div class="dataTables_filter">
+                                        <a asp-action="AddDiscountCode" type="button" class="btn btn-rounded btn-primary btn-sm"> افزودن کد تخفیف جدید</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <th> کد تخفیف</th>
+                                        <th>مبلغ</th>
+                                        <th>تاریخ شروع</th>
+                                        <th>تاریخ پایان</th>
+
+                                        <th>تعداد باقی مانده</th>
+                                        <th>تعداد کل </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Data.Items)
+                                    {
+                                        <tr id="tr_@item.Id">
+
+
+                                            <td>@item.Code</td>
+                                            <td>@item.Price.ToString("##,###") تومان</td>
+                                            <td>@DateTimeConvertor.PersianDate(item.StartDate)</td>
+                                            <td>@DateTimeConvertor.PersianDate(item.EndDateTime)</td>
+                                            <td>@item.UsageCount</td>
+                                            <td>@item.Count</td>
+                                            <td>
+                                                <div class="btn-group mb-5">
+                                                    <button type="button" class="btn btn-sm btn-dark dropdown-toggle" data-toggle="dropdown">عملیات</button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                                        <a class="dropdown-item" onclick='DeleteUser(@item.Id,"@item.Code")'>حذف</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5">
+
+                                    <div class="dataTables_info" id="complex_header_info" role="status" aria-live="polite">
+                                        نمایش
+                                        @( ((Model.Data.Meta.CurrentPage - 1) * Model.Data.Meta.ObjectInPage) + 1) تا @(Model.Data.Meta.CurrentPage * Model.Data.Meta.PageSize) از @Model.Data.Meta.TotalCount ورودی
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-7">
+                                    <partial name="_DiscountCodePagination" model="Model.Data.Meta" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!-- /.box-header -->
+
+            </div>
+        </div>
+    </div>
+</section>
+@section script
+{
+    <script src="/assets/vendor_components/sweetalert/sweetalert.min.js"></script>
+    <script>
+        function DeleteUser(id, name) {
+
+            //Parameter
+
+            swal({
+                title: "حذف کد تخفیف",
+                text: `ایا مطمئن از حذف کد تخفیف ${name} هستید`,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "بله، آن را حذف کنید!",
+                cancelButtonText: "نه، لغو لطفا!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: '/AdminPanel/discountCode/' + id,
+                            method: 'DELETE',
+                            contentType: 'application/json',
+                            success: function (result) {
+                                swal("پاک شد!", "عملیات با موفیقت انجام شد", "success");
+                            },
+                            error: function (request) {
+
+                                swal("خطا", request.responseJSON.message, "error");
+                            }
+                        });
+
+                    } else {
+                        swal("لغو شد", "عملیات لغو شد:)", "error");
+                    }
+                });
+
+
+        }
+
+    </script>
+
+}
+
+

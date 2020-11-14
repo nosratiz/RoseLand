@@ -1,0 +1,73 @@
+﻿@model OnlineShop.Common.Result.Result<OnlineShop.Application.General.Blog.ModelDto.BlogDto>
+
+    @{
+    ViewData["Title"] = @Model.Data.Slug;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+
+    <div class="container inner-news__container level">
+        @if(Model.Success){
+        <div class="level-right content">
+            <h1 class="title">@Model.Data.Title</h1>
+            <div class="level">
+                <div class="level-right">
+                    <div class="news-meta-data"><span class="title">تاریخ انتشار:</span> ۰۲ تیر ۱۳۹۹</div>
+                </div>
+                <div class="level-left">
+                    <div class="news-meta-data"><span class="title">بازدید:</span> @Model.Data.TotalView</div>
+                </div>
+            </div>
+            <img src="@Model.Data.Image" alt="@Model.Data.Title" />
+            <div class="news-content">
+                @Html.Raw(Model.Data.LongDescription)
+            </div>
+            <div class="level">
+                <div class="level-right">
+                    <div class="news-meta-data"><span class="title">دسته بندی:</span> @Model.Data.BlogCategory.Name
+                    </div>
+                </div>
+                <div class="level-left">
+                    <div class="news-meta-data"><span class="title">نویسنده:</span> @Model.Data.User.FullName</div>
+                </div>
+            </div>
+            <div class="level tag-container">
+                <span class="tag-title">تگ‌ها: </span>
+                @foreach (var item in Model.Data.Tag)
+                {
+                <a href="#" target="_blank" class="level-items tags-items">#@item</a>            
+                }
+            </div>
+        </div>
+        }
+        <div class="level-left sidebar">
+            <h2 class="title">فهرست آخرین اخبار</h2>
+            <a class="items">
+                <figure>
+                    <img src="/img/widget2.jpg" alt="" />
+                </figure>
+                <div class="inner-content">
+                    <h3 class="items-title">مناسبترین گل برای کافه</h3>
+                    <span class="date">۵ تیر ۱۳۹۹</span>
+                </div>
+            </a>
+            <a class="items">
+                <figure>
+                    <img src="/img/widget2.jpg" alt="" />
+                </figure>
+                <div class="inner-content">
+                    <h3 class="items-title">مناسبترین گل برای کافه</h3>
+                    <span class="date">۵ تیر ۱۳۹۹</span>
+                </div>
+            </a>
+            <a class="items">
+                <figure>
+                    <img src="/img/widget2.jpg" alt="" />
+                </figure>
+                <div class="inner-content">
+                    <h3 class="items-title">مناسبترین گل برای کافه</h3>
+                    <span class="date">۵ تیر ۱۳۹۹</span>
+                </div>
+            </a>
+        </div>
+    </div>

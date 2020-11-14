@@ -1,0 +1,200 @@
+﻿@model OnlineShop.Common.Result.Result<OnlineShop.Application.Shop.Products.ModelDto.ProductDto>
+    @{
+    if (Model.Success)
+    {
+    ViewData["Title"] = $"-{Model.Data.Name}";
+    }
+    else
+    {
+    ViewData["Title"] = "صفحه مورد نظر پیدا نشد";
+
+    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <link href="~/css/flexslider.css" rel="stylesheet" />
+    <link href="~/css/flexslider-rtl-min.css" rel="stylesheet" />
+
+    <div class="single-product">
+        <div class="container">
+            <div class="column">
+                <div id="productSlider" class="flexslider" style="direction: rtl;">
+                    <ul class="slides">
+                        <li>
+                            <img src="@Model.Data.Image" />
+                        </li>
+                        @foreach (var gallery in Model.Data.ProductGalleries)
+                        {
+                        <li>
+                            <img src="@gallery.Image" />
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="column">
+                <div class="header-container">
+                    <div class="title-container">
+                        <div>
+                            <span>مشخصات </span>
+                            <h1>@Model.Data.Name</h1>
+                        </div>
+                        <div class="price-container">
+                            <span class="item-title">قیمت:</span>
+                            <span class="item-price">
+                                @((Model.Data.DiscountPrice??Model.Data.Price).ToString("##,###"))
+                                تومان
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="item">
+                        <span class="item-title title">دسته‌بندی: </span>
+                        <a class="item-value" asp-controller="Product" asp-action="ProductList"
+                            asp-route-categoryId="@Model.Data.ProductCategoryId">@Model.Data.ProductCategory.Name</a>
+                    </div>
+                </div>
+                <div class="row attribute-placeholder">
+                    <div class="item">
+                        <span class="item-title title">تعداد شاخه </span>
+                        <select class="form-control attribute-selection">
+                            @foreach (var item in Model.Data.ProductVariants)
+                            {
+                            <option data-price="@(item.DiscountPrice??item.Price)" value="@item.Id">
+                                @item.Count
+                            </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="item">
+                        <span class="item-title title">توضیحات: </span>
+                        <p>@Model.Data.Description</p>
+                    </div>
+                </div>
+                <input type="hidden" value="2752" />
+                <button class="purchase-btn">
+                    <span>افزودن به سبد خرید</span>
+                </button>
+            </div>
+        </div>
+
+        @await Component.InvokeAsync("RelatedProductComponent", new
+        {
+        categoryId = Model.Data.ProductCategoryId,
+        productId = Model.Data.Id
+        })
+
+        @await Component.InvokeAsync("CommentComponent", new { productId = Model.Data.Id })
+    </div>
+    @section Scripts
+    {
+        
+    <script>
+        $(document).ready(function () {
+            var productId = @Model.Data.ProductVariantId;
+
+            $('.single-product .purchase-btn').click(function (e) {
+
+                var customDate = JSON.stringify({
+                    productVariantId: parseInt(productId),
+                    count: 1
+                });
+                $.ajax({
+                    url: "/site/addToCart/",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: customDate,
+                }).done(data => {
+
+                    $("#basketCount").html(data.basketCount);
+
+                    $("#basketprice").html(`${data.totalPrice.toLocaleString()} تومان`);
+                    $.toast({
+                        heading: 'محصول مورد نظر به سبد خرید شما افزوده شد',
+                        text: '',
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'success',
+                        hideAfter: 2000,
+                        stack: 6
+                    });
+
+                    setTimeout(function () {
+                            window.location.href = "/cart";
+                        },
+                        2000);
+                }).fail(error => {
+
+                    $.toast({
+                        heading: 'خطا',
+                        text: !error.responseJSON ?
+                            "در ارسال پیام شما مشکلی به وجود آمده است." : error
+                            .responseJSON.message,
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'error',
+                        hideAfter: 3500,
+                    });
+                });
+
+            });
+
+            var selectedSize = null;
+            var selectedBoxType = null;
+            $('.single-product .item .attribute').click(function (e) {
+                e.preventDefault();
+                var index = Number($(this).closest('.item').attr('data-index'));
+                if (index === 0) {
+                    return (selectedSize = $(this).attr('data-id'));
+                }
+
+            });
+
+
+            $(".send-btn").click(function () {
+                var customDate = JSON.stringify({
+                    description: document.getElementById("comment").value,
+                    productId: @Model.Data.Id
+                });
+                $.ajax({
+                    url: "/site/AddComment/",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: customDate,
+                }).done(data => {
+
+                    $.toast({
+                        heading: 'کامنت شما افزوده شد پس از تایید در سایت قرار خواهد گرفت',
+                        text: '',
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'success',
+                        hideAfter: 2000,
+                        stack: 6
+                    });
+
+
+                }).fail(error => {
+
+                    $.toast({
+                        heading: 'خطا',
+                        text: !error.responseJSON ?
+                            "در ارسال پیام شما مشکلی به وجود آمده است." : error
+                            .responseJSON.message,
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'error',
+                        hideAfter: 3500,
+                    });
+                });;
+            });
+
+
+        });
+    </script>
+    }

@@ -1,0 +1,185 @@
+﻿@model OnlineShop.Application.Shop.ProductCategories.ModelDto.UpdateProductCategoryViewModel
+
+@{
+    ViewData["Title"] = "ویرایش دسته بندی";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت دسته بندی</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="ProductCategory" asp-action="ProductCategoryList">لیست دسته بندی</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">ویرایش دسته بندی</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+        @if (Model.ProductCategoryResult.Success)
+        {
+
+
+            <div class="col-12">
+                <div class="box">
+                    <form id="editProductCategoryForm">
+                        <div class="box-header with-border">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>نام دسته بندی <span class="text-danger">*</span></h5>
+                                        <div class="controls">
+                                            <input type="text" name="name" id="name" value="@Model.ProductCategoryResult.Data.Name" class="form-control" required data-validation-required-message="این فیلد مورد نیاز است">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <label>سردسته</label>
+                                    <select asp-for="ProductCategoryResult.Data.ParentId" id="parentid" asp-items="@(new SelectList(Model.ProductCategory, "Id", "Name"))" class="form-control">
+                                        <option>یک سر دسته انتخاب کنید</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>نام پیوند </h5>
+                                        <div class="controls">
+                                            <input type="text" name="slug" id="slug" value="@Model.ProductCategoryResult.Data.Slug" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>توضیحات </h5>
+                                        <div class="controls">
+                                            <textarea name="description" id="description" asp-for="ProductCategoryResult.Data.Description" class="form-control"></textarea>
+                                        </div>
+                                        <input type="hidden" id="id" name="id" value="@Model.ProductCategoryResult.Data.Id" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="box-body">
+                                        <input type="hidden" id="logo" name="logo" value="@Model.ProductCategoryResult.Data.Image" />
+                                        <form method="post" enctype="multipart/form-data" id="myform">
+                                            <div class="form-group">
+                                                <div class="row p-t-20">
+                                                    <div class="col-md-3" style="margin: 0">
+                                                        <div class="fileUpload btn btn-info" style="border-radius: 5px; height: 30px;">
+                                                            <span>Upload</span>
+                                                            <input id="imgUp" name="imgUp" type="file" class="upload" value="آپلود"
+                                                                   style="position: absolute; top: 0; right: 0; margin: 0; padding: 0; font-size: 20px; cursor: pointer; opacity: 0; filter: alpha(opacity=0);" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-9" style="margin: 0">
+                                                        <input id="imgUpInput" class="img img-bordered img-fluid" placeholder="تصویر را انتخاب کنید" disabled="disabled" style="border-radius: 5px; height: 30px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <img id="previewholder" src="@Model.ProductCategoryResult.Data.Image" alt="uploaded image preview holder" style="margin-bottom: 30px; margin-top: 10px;" width="250px" height="250px" />
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>وضیعت دسته بندی </h5>
+                                        <div class="controls">
+                                            <input type="checkbox" id="checkbox_1" checked="@Model.ProductCategoryResult.Data." name="UpdateCategoryCommand.IsActive">
+                                            <label for="checkbox_1">فعال</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="box-footer text-right">
+                                        <button type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                            <i class="ti-trash"></i> لغو
+                                        </button>
+                                        <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                            <i class="ti-save-alt"></i> ویرایش
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section script
+{
+    <script src="/Admin/js/validation.js"></script>
+
+    <script src="~/Admin/js/ProductCategory/productCategoryCommand.js"></script>
+    <script>
+        function readurl(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewholder').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById("imgUp").onchange = function () {
+            document.getElementById("imgUpInput").value = this.value;
+        };
+        $("#imgUp").change(function () {
+            var fd = new FormData();
+            var files = $('#imgUp')[0].files[0];
+
+            console.log(files);
+            fd.append('files', files);
+
+            $.ajax({
+                url: '/file/Upload',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response != 0) {
+                        $('#previewholder').show();
+                        $('#previewholder').removeAttr('hidden');
+                        console.log(response[0].path);
+                        $("#logo").val(response[0].path);
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                },
+            });
+
+            readurl(this);
+        });
+
+
+
+    </script>
+}
+
+
+

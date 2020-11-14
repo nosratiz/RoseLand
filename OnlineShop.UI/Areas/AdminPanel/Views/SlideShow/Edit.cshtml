@@ -1,0 +1,236 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Application.General.SlideShow.ModelDto.SlideShowDto>
+@{
+    ViewData["Title"] = "ویرایش اسلایدر";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+
+<link href="~/Admin/js/PersianCalender/bootstrap-datepicker.css" rel="stylesheet" />
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت اسلاید شو</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="SlideShow" asp-action="List">لیست اسلاید شو</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">ویرایش اسلایدشو</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+        @if (Model.Success)
+        {
+            <div class="col-12">
+                <div class="box">
+                    <form id="editSlideShowForm">
+                        <div class="box-header with-border">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>نام <span class="text-danger">*</span></h5>
+                                        <div class="controls">
+                                            <input type="text" name="name" onkeyup="Just_persian(this);" value="@Model.Data.Name" id="name" class="form-control">
+                                            <span id="span-name" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>عنوان <span class="text-danger">*</span></h5>
+                                        <div class="controls">
+                                            <input type="text" name="title" onkeyup="Just_persian(this);" value="@Model.Data.Title" id="title" class="form-control">
+                                            <span id="span-title" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="datepicker">تاریخ شروع </label>
+
+                                        <div class="input-append">
+                                            <input id="datepicker" name="StartDate" onkeydown="persiandate(this);" value="@(DateTimeConvertor.ShortPersianDay(Model.Data.StartDateTime))" class="form-control" type="text">
+
+                                        </div>
+                                        <span id="span-datepicker" class="help-block"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="datepicker">تاریخ پایان </label>
+
+                                        <div class="input-append">
+                                            <input id="datepicker2" name="EndDateTime" onkeydown="persiandate(this);" value="@(DateTimeConvertor.ShortPersianDay(Model.Data.EndDateTime))" class="form-control" type="text">
+
+                                        </div>
+                                        <span id="span-datepicker2" class="help-block"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>آدرس url </h5>
+                                        <div class="controls">
+                                            <input type="text" name="url" id="url" value="@Model.Data.Url" class="form-control">
+                                            <span id="span-url" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>شماره نمایش </h5>
+                                        <div class="controls">
+                                            <input type="number" name="sortOrder" value="@Model.Data.SortOrder" onkeyup="PlusNumber(this);" id="sortOrder" class="form-control">
+                                            <span id="span-sortOrder" class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>توضیحات </h5>
+                                        <div class="controls">
+                                            <textarea id="description" asp-for="@Model.Data.Description" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="box-body">
+                                        <input type="hidden" id="logo" name="logo" value="@Model.Data.Image" />
+                                        <form method="post" enctype="multipart/form-data" id="myform">
+                                            <div class="form-group">
+                                                <div class="row p-t-20">
+                                                    <div class="col-md-3" style="margin: 0">
+                                                        <div class="fileUpload btn btn-info" style="border-radius: 5px; height: 30px;">
+                                                            <span>Upload</span>
+                                                            <input id="imgUp" name="imgUp" type="file" class="upload" value="آپلود"
+                                                                   style="position: absolute; top: 0; right: 0; margin: 0; padding: 0; font-size: 20px; cursor: pointer; opacity: 0; filter: alpha(opacity=0);" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-9" style="margin: 0">
+                                                        <input id="imgUpInput" class="img img-bordered img-fluid" placeholder="تصویر را انتخاب کنید" disabled="disabled" style="border-radius: 5px; height: 30px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <img id="previewholder" src="@Model.Data.Image" alt="uploaded image preview holder" style="margin-bottom: 30px; margin-top: 10px;" width="250px" height="250px"  />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="box-footer text-right">
+                                        <a asp-action="List" type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                            <i class="ti-trash"></i> لغو
+                                        </a>
+                                        <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                            <i class="ti-save-alt"></i> افزودن
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <h5>وضیعت نمایش </h5>
+                                        <div class="controls">
+                                            <input type="checkbox" id="checkbox_1" checked="@Model.Data.IsVisible" name="IsVisible" value="false">
+                                            <label for="checkbox_1">فعال</label>
+                                        </div>
+                                        <input type="hidden" id="id" name="id" value="@Model.Data.Id" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section script
+{
+
+    <script src="~/Admin/js/Validation.js"></script>
+
+    <script src="~/Admin/js/SlideShow/SlideShowCommand.js"></script>
+    <script src="~/Admin/js/PersianCalender/bootstrap-datepicker.js"></script>
+    <script src="~/Admin/js/PersianCalender/bootstrap-datepicker-fa.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#datepicker").datepicker({
+
+            });
+
+
+            $("#datepicker2").datepicker();
+
+        });
+    </script>
+    <script>
+        function readurl(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewholder').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById("imgUp").onchange = function () {
+            document.getElementById("imgUpInput").value = this.value;
+        };
+        $("#imgUp").change(function () {
+            var fd = new FormData();
+            var files = $('#imgUp')[0].files[0];
+
+            console.log(files);
+            fd.append('files', files);
+
+            $.ajax({
+                url: '/file/Upload',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response != 0) {
+                        $('#previewholder').show();
+                        $('#previewholder').removeAttr('hidden');
+                        console.log(response[0].path);
+                        $("#logo").val(response[0].path);
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                },
+            });
+
+            readurl(this);
+        });
+
+
+
+    </script>
+}
+

@@ -1,0 +1,18 @@
+﻿@using OnlineShop.Common.Helper
+@model List<OnlineShop.Application.General.Blog.ModelDto.BlogDto>
+
+<div class="popular-container">
+    <h2 class="title">پر طرفدارترین‌ها</h2>
+    @foreach (var item in Model)
+    {
+        <div class="items">
+            <figure>
+                <img src="@item.Image" alt="@item.Title"/>
+            </figure>
+            <div class="inner-content">
+                <h3 class="items-title">@item.Title</h3>
+                <span class="date">@DateTimeConvertor.PersianDateTime(item.CreateDate)</span>
+            </div>
+        </div>
+    }
+</div>

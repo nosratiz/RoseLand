@@ -1,0 +1,23 @@
+@model List<OnlineShop.Application.General.SlideShow.ModelDto.SlideShowDto>
+
+
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      @foreach (var item in Model)
+      {
+      <div class="swiper-slide" style="background-image: url('@item.Image');">
+        <div class="content">
+          <span class="banner-extra animated fadeInRightBig">پکیچ ویژه</span>
+          <h2 class="banner-title animated fadeInRightBig">@item.Name</h2>
+          <p class="banner-description animated fadeInRightBig">با ۳۰٪ تخفیف</p>
+          @if(!string.IsNullOrWhiteSpace(item.Url)){
+          <a class="btn animated fadeInRightBig" href="@item.Url">خرید</a>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>

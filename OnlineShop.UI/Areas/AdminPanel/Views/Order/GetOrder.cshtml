@@ -1,0 +1,113 @@
+﻿@using System.ComponentModel
+@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Application.Shop.Orders.ModelDto.OrderDto>
+
+@{
+    ViewData["Title"] = "جزئیات سفارش";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="box">
+            @if (Model.Success)
+            {
+                <div class="box-header">
+                    <h4 class="box-title">خلاصه محصول</h4>
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>عکس</th>
+                                    <th>محصول</th>
+                                    <th>تعداد</th>
+                                    <th class="w-200">قیمت</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Data.OrderItems)
+                                {
+                                    <tr>
+                                        <td><img src="@item.ProductVariant.Product.Image" alt="" width="80"></td>
+                                        <td>@item.ProductVariant.Product.Name</td>
+                                        <td>@item.Count</td>
+                                        <td>@item.Price.ToString("##,###") تومان</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <th colspan="3" class="text-right font-size-14 font-weight-700">هزینه حمل نقل</th>
+                                    <th class="font-size-14 font-weight-700">@Model.Data.ShipmentPrice.ToString("##,###") تومان</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="3" class="text-right font-size-14 font-weight-700">میزان تخفیف</th>
+                                    <th class="font-size-14 font-weight-700">@(Model.Data.DiscountPrice!=0 ?$"{Model.Data.DiscountPrice:##,###} تومان":"0" )
+                                <tr>
+                                    <th colspan="3" class="text-right font-size-14 font-weight-700">مبلغ قابل پرداخت</th>
+                                    <th class="font-size-14 font-weight-700">@Model.Data.FinalAmount.ToString("##,###") تومان</th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                        <h4 style="margin-top: 40px" class="box-title mb-15">مشخصات سفارش</h4>
+                        <hr>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>تاریخ سفارش</th>
+                                        <th>تاریخ تحویل </th>
+                                        <th>وضعیت سفارش</th>
+                                        <th>شماره سفارش</th>
+                                        <th>کد تخفیف</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Model.Data.CreateDate</td>
+                                        <td>@Model.Data.DeliveryDate</td>
+                                        <td>@EnumConvertor.GetDisplayName(Model.Data.OrderStatus)</td>
+                                        <td>@Model.Data.OrderNumber</td>
+                                        <td>@Model.Data.DiscountCode?.Code</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h4 style="margin-top: 40px" class="box-title mb-15">مشخصات خریدار</h4>
+                        <hr>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>نام خریدار</th>
+                                        <th>نام تحویل گیرنده</th>
+                                        <th>شماره تماس گیرنده</th>
+                                        <th>آدرس</th>
+                                        <th class="w-200">توضیحات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Model.Data.UserAddress.User.FullName</td>
+                                        <td>@Model.Data.UserAddress.Name</td>
+                                        <td>@Model.Data.UserAddress.Mobile</td>
+                                        <td>@Model.Data.UserAddress.Address</td>
+                                        <td>@Model.Data.UserAddress.Description</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                      
+                     
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

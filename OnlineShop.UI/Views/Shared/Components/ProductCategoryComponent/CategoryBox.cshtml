@@ -1,0 +1,12 @@
+﻿@model List<OnlineShop.Application.Shop.ProductCategories.ModelDto.ProductCategoryDto>
+
+<div class="items-container">
+    <div class="items-header">دسته بندی</div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="items"><span class="tag">@item.ProductCount</span> @item.Name</div>
+        }
+
+    </div>
+</div>

@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewData["Title"] = "افزودن کد تخفیف";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<link href="~/Admin/js/PersianCalender/bootstrap-datepicker.css" rel="stylesheet" />
+
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت تخفیفات</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="DiscountCode" asp-action="List">لیست تخفیفات</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">افزودن کد تخفیف</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="box">
+                <form id="discountCodeForm">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>کد <span class="text-danger">*</span></h5>
+                                    <div class="controls">
+                                        <input type="text" name="code" id="code" class="form-control">
+                                        <span id="span-code" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>تعداد <span class="text-danger">*</span></h5>
+                                    <div class="controls">
+                                        <input type="number" name="totalCount" id="totalCount" onkeydown="PlusNumber(this);" class="form-control">
+                                        <span id="span-totalCount" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>نوع تخفیف <span class="text-danger">*</span></h5>
+                                    <select name="DiscountType" class="form-control" id="DiscountType">
+                                        <option value="1">مقداری</option>
+                                        <option value="2">درصدی</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>مقدار <span class="text-danger">*</span></h5>
+                                    <div class="controls">
+                                        <input type="number" name="Price" id="Price" onkeydown="PlusNumber(this);" class="form-control">
+                                        <span id="span-Price" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="datepicker">تاریخ شروع تخفیف</label>
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            <input id="datepicker" name="StartDate" class="form-control" type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="datepicker">تاریخ پایان تخفیف</label>
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            <input id="datepicker2" name="EndDateTime" class="form-control" type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="box-footer text-right">
+                                    <a asp-action="List" type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                        <i class="ti-trash"></i> لغو
+                                    </a>
+                                    <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                        <i class="ti-save-alt"></i> افزودن
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>وضیعت تخفیف </h5>
+                                    <div class="controls">
+                                        <input type="checkbox" id="checkbox_1" name="isActive" value="false">
+                                        <label for="checkbox_1">فعال</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section script
+{
+    <script src="~/Admin/js/Validation.js"></script>
+    <script src="~/Admin/js/DiscountCode/DiscountCodeCommand.js"></script>
+
+    <script src="~/Admin/js/PersianCalender/bootstrap-datepicker.js"></script>
+    <script src="~/Admin/js/PersianCalender/bootstrap-datepicker-fa.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#datepicker").datepicker({
+
+            });
+
+
+            $("#datepicker2").datepicker();
+
+        });
+    </script>
+}
+
+
+

@@ -1,0 +1,57 @@
+﻿@model OnlineShop.Common.Result.Result<OnlineShop.Application.Users.ModelDto.UserDto>
+@{
+    ViewData["Title"] = "ویرایش حساب کاربری";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string url = "editprofile";
+}
+
+<div class="profile container level">
+    @await Component.InvokeAsync("ProfileSideBarComponent", new { url })
+
+    <div class="level-items">
+        <div class="user-information">
+            <h3>ویرایش حساب کاربری</h3>
+            <form id="editprofileForm" novalidate>
+                <div class="field">
+                    <p class="control">
+                        <label class="label">نام </label>
+                        <input name="name" class="input" value="@Model.Data.Name" type="text" />
+                    </p>
+                    <p class="help is-danger hide">
+                        نام خود را به درستی وارد نمایید.
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <label class="label"> نام خانوادگی</label>
+                        <input name="family" class="input" value="@Model.Data.Family" type="text" />
+                    </p>
+                    <p class="help is-danger hide">
+                        نام خانوادگی خود را به درستی وارد نمایید.
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <label class="label">ایمیل</label>
+                        <input name="email" class="input" value="@Model.Data.Email" type="email" readonly disabled />
+                    </p>
+                    <p class="help is-danger hide">
+                        ایمیل خود را به درستی وارد نمایید.
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <label class="label">شماره تماس</label>
+                        <input name="phoneNumber" class="input" value="@Model.Data.PhoneNumber" type="tel" />
+                    </p>
+                    <p class="help is-danger hide">
+                        شماره تماس خود را به درستی وارد نمایید.
+                    </p>
+                </div>
+                <input type="hidden" id="id" name="id" value="@Model.Data.Id"/>
+                <button type="submit" class="submit-btn">ویرایش اطلاعات</button>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,234 @@
+﻿@model List<OnlineShop.Application.General.BlogCategory.ModelDto.BlogCategoryDto>
+
+@{
+    ViewData["Title"] = "افزودن مقاله";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/assets/vendor_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
+<link href="~/Admin/js/PersianCalender/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت مقاله</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="Blog" asp-action="BlogList">لیست مقالات</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">افزودن مقاله</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="box">
+                <form id="blogForm">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>عنوان <span class="text-danger">*</span></h5>
+                                    <div class="controls">
+                                        <input type="text" name="title" id="title" class="form-control">
+                                        <span id="span-title" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>نام پیوند </h5>
+                                    <div class="controls">
+                                        <input type="text" name="slug" id="slug" class="form-control">
+                                        <span id="span-slug" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <label>سردسته</label>
+                                <select name="categoryId" id="categoryId" asp-items="@(new SelectList(Model,"Id","Name"))" class="form-control">
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>توضیحات </h5>
+                                    <div class="controls">
+                                        <textarea name="description" id="description" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <div>
+                                        <div id="body" name="body" style="height: 150px;"></div>
+                                    </div>
+                                    <span id="span-body" class="help-block"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="datepicker">تاریخ انتشار در سایت</label>
+                                    <div class="controls">
+                                        <div class="input-append">
+                                            <input id="datepicker" name="StartDate" class="form-control" type="text">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label>تگ</label>
+                                    <div class="controls">
+
+                                        <input type="text" id="tag" class="form-control" data-role="tagsinput" style="display: block" placeholder="add tags" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+
+                                <div class="box-body">
+                                    <input type="hidden" id="logo" name="logo" />
+                                    <form method="post" enctype="multipart/form-data" id="myform">
+                                        <div class="form-group">
+                                            <div class="row p-t-20">
+                                                <div class="col-md-3" style="margin: 0">
+                                                    <div class="fileUpload btn btn-info" style="border-radius: 5px; height: 30px;">
+                                                        <span>Upload</span>
+                                                        <input id="imgUp" name="imgUp" type="file" class="upload" value="آپلود"
+                                                               style="position: absolute; top: 0; right: 0; margin: 0; padding: 0; font-size: 20px; cursor: pointer; opacity: 0; filter: alpha(opacity=0);" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-9" style="margin: 0">
+                                                    <input id="imgUpInput" class="img img-bordered img-fluid" placeholder="تصویر را انتخاب کنید" disabled="disabled" style="border-radius: 5px; height: 30px;" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <img id="previewholder" alt="uploaded image preview holder" style="margin-bottom: 30px; margin-top: 10px;" width="250px" height="250px" hidden="true" />
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="box-footer text-right">
+                                        <a asp-action="BlogList" type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                            <i class="ti-trash"></i> لغو
+                                        </a>
+                                        <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                            <i class="ti-save-alt"></i> افزودن
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section script
+{
+    <script src="~/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js"></script>
+    <script src="~/assets/vendor_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+    <script src="~/Admin/js/PersianCalender/bootstrap-datepicker.js"></script>
+    <script src="~/Admin/js/PersianCalender/bootstrap-datepicker-fa.js"></script>
+
+    <script src="~/Admin/js/Blog/Blog.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#datepicker").datepicker({
+                startDate: '-3d'
+
+
+            });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#body').summernote({
+                height: 160
+            });
+        });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="~/js/Validation.js"></script>
+
+    <script>
+        function readurl(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewholder').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById("imgUp").onchange = function () {
+            document.getElementById("imgUpInput").value = this.value;
+        };
+        $("#imgUp").change(function () {
+            var fd = new FormData();
+            var files = $('#imgUp')[0].files[0];
+
+            console.log(files);
+            fd.append('files', files);
+
+            $.ajax({
+                url: '/file/Upload',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response != 0) {
+                        $('#previewholder').show();
+                        $('#previewholder').removeAttr('hidden');
+                        console.log(response[0].path);
+                        $("#logo").val(response[0].path);
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                },
+            });
+
+            readurl(this);
+        });
+
+
+    </script>
+}

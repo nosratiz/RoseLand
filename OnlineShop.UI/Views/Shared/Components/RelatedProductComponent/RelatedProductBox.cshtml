@@ -1,0 +1,44 @@
+﻿@using OnlineShop.Common.Helper
+@model List<OnlineShop.Application.Shop.Products.ModelDto.ProductDto>
+
+
+@if (Model.Any())
+{
+    <div class="products-container container">
+        <h2>محصولات مرتبط</h2>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <a asp-action="ProductDetail" asp-controller="Product" asp-route-slug="@item.Slug" class="items">
+                    <figure>
+                        @if (item.HasDiscount)
+                        {
+                            <span class="discount-badge">@DiscountPercentageCalculator.Calculate(item.Price, item.DiscountPrice) % تخفیف</span>
+                        }
+                        <img src="@item.Image" alt="@item.Name" />
+                        <div class="btn-container">
+                            <div data-id="@item.ProductVariantId" class="shop-icon icon"></div>
+                            <div class="favorite-icon icon"></div>
+                        </div>
+                    </figure>
+                    <div class="caption">
+                        <h4>@item.Name</h4>
+                        <div class="price-container">
+                            @if (item.HasDiscount)
+                            {
+                                <span class="price line-through">@item.Price.ToString("##,###") تومان</span>
+                                <span class="discount line-through">@item.DiscountPrice.Value.ToString("##,###") تومان</span>
+                            }
+                            else
+                            {
+                                <span class="discount line-through">@item.Price.ToString("##,###") تومان</span>
+                            }
+                        </div>
+                    </div>
+
+                </a>
+            }
+
+        </div>
+    </div>
+}

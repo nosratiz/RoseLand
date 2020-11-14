@@ -1,0 +1,121 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.Shop.Products.ModelDto.ProductDto>>
+
+@{
+    ViewData["Title"] = "محصولات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.model = Model.Parameter;
+}
+
+<div class="container product-items__container level">
+    <div class="level-right sidebar">
+        @await Component.InvokeAsync("ProductCategoryComponent")
+        <div class="items-container">
+            <div class="items-header">محدوده قیمت</div>
+            <input id="priceRange" type="text" class="js-range-slider" name="my_range" value="" />
+        </div>
+    </div>
+    <div class="level-left products-container">
+        <div class="tools-container">
+            <h4 class="items-header">جستجوی محصولات</h4>
+            <div class="row">
+                <div class="field">
+                    <p class="control">
+                        <label class="label">تعداد نمایش</label>
+                    </p><div class="select">
+                        <select id="showCount">
+                            <option value="12">12</option>
+                            <option value="24">24</option>
+                            <option value="48">48</option>
+                            <option value="96">96</option>
+                            <option value="all">نمایش همه</option>
+                        </select>
+                    </div>
+                    <p></p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <label class="label">مرتب سازی بر اساس</label>
+                    </p><div class="select">
+                        <select id="sort">
+                            <option value="1">مرتب سازی بر اساس محبوبیت</option>
+                            <option value="2">مرتب سازی بر اساس میانگین رتبه</option>
+                            <option value="3">مرتب سازی بر اساس جدیدترین</option>
+                            <option value="4">مرتب سازی بر اساس هزینه: کم به زیاد</option>
+                            <option value="5">مرتب سازی بر اساس هزینه: زیاد به کم</option>
+                        </select>
+                    </div>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var item in Model.Data.Items)
+            {
+                <a asp-action="productDetail" asp-controller="Product" asp-route-slug="@item.Slug" class="items">
+                    <figure>
+                        @if (item.HasDiscount)
+                        {
+                            <span class="discount-badge">
+                                @DiscountPercentageCalculator.Calculate(item.Price, item.DiscountPrice)
+                                % تخفیف
+                            </span>
+                        }
+                        <img src="@item.Image" alt="@item.Name" />
+                        <div class="btn-container">
+                            <div data-id="@item.ProductVariantId" class="shop-icon icon"></div>
+                            <div class="favorite-icon icon"></div>
+                        </div>
+                    </figure>
+                    <div class="caption">
+                        <h4>@item.Name</h4>
+                        <div class="price-container">
+                            @if (item.HasDiscount)
+                            {
+                                <span class="price line-through">@item.Price.ToString("##,###") تومان</span>
+                                <span class="discount line-through">@item.DiscountPrice.Value.ToString("##,###") تومان</span>
+                            }
+                            else
+                            {
+                                <span class="discount line-through">@item.Price.ToString("##,###") تومان</span>
+                            }
+                        </div>
+                    </div>
+
+                </a>
+            }
+
+
+            <partial name="_ProdutcListPagination" model="Model.Data.Meta" />
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+
+    <script>
+        $(document).ready(function () {
+            //PRICE RANGE
+            $("#priceRange").ionRangeSlider({
+                type: "double",
+                skin: "round",
+                min: 0,
+                max: 10000000,
+                from: 0,
+                to: 100000000,
+                prefix: "ریال",
+                prettify_enabled: true,
+                prettify_separator: ",",
+                onChange: function (data) {
+                    $(".price-range-container .amount.from").text(data.from.toLocaleString());
+                    return $(".price-range-container .amount.to").text(data.to.toLocaleString());
+                },
+                onFinish: function (data) {
+                    min = data.from;
+                    max = data.to;
+                }
+            });
+        });
+    </script>
+}

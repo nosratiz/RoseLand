@@ -1,0 +1,162 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Application.Shop.Orders.ModelDto.OrderDto>
+@{
+    ViewData["Title"] = "Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="checkout-container">
+    <div class="container">
+        <h2>شیوه پرداخت</h2>
+        <div class="payment-method">
+            <div class="column">
+                <div class="item active">
+                    <span class="icon"></span>
+                    <div class="title">پرداخت اینترنتی</div>
+                    <p class="description">
+                        (قابل پرداخت با تمامی کارت&zwnj;های عضو شتاب) <br />
+                        سرعت بیشتر در پردازش و ارسال سفارش
+                    </p>
+                </div>
+                <div class="item">
+                    <span class="icon"></span>
+                    <div class="title">پرداخت در محل</div>
+                    <p class="description">
+                        (قابل پرداخت با تمامی کارت های بانکی در زمان تحویل سفارش)
+                    </p>
+                </div>
+            </div>
+            @if (Model.Success)
+            {
+                <div class="column">
+                    <p class="description">
+                        این سفارش در بازه ساعت @EnumConvertor.GetDisplayName(Model.Data.DeliverPeriodTime) تاریخ شنبه @Model.Data.DeliveryDate به @Model.Data.UserAddress.Name به آدرس @Model.Data.UserAddress.Address و شماره تماس @Model.Data.UserAddress.Mobile تحویل می گردد
+                    </p>
+                    <div class="row">
+                        <span class="title">مبلغ کل خرید</span>
+                        <span class="value">@Model.Data.FinalAmount.ToString("##,###") تومان </span>
+                    </div>
+                    <div class="row">
+                        <span class="title">هزینه ارسال و بسته بندی</span>
+                        <span class="value">@(Model.Data.ShipmentPrice==0?"رایگان":$"{Model.Data.ShipmentPrice:##,###} تومان" ) </span>
+                    </div>
+                    <div class="row">
+                        <span class="title">مجموع تخفیف ها</span>
+                        <span id="discountValue" class="value">@(Model.Data.DiscountPrice==0?$"0 تومان":$"{Model.Data.DiscountPrice:##,###} تومان")</span>
+                    </div>
+                    <div class="row">
+                        <span class="title">قابل پرداخت</span>
+                        <span id="finalAmount" class="value">@((Model.Data.ShipmentPrice+Model.Data.FinalAmount).ToString("##,###")) تومان</span>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="discount-code">
+            <div class="column">
+                <span class="title">کارت هدیه و کد تخفیف</span>
+                <div class="field">
+                    <p class="control input">
+                        <input type="text" name="discountCode" placeholder="کد تخفیف" />
+                    </p>
+                </div>
+            </div>
+            <div class="column">
+                <button class="remove-btn hide">حذف کد هدیه</button>
+                <button class="discount-btn">اعمال کد هدیه</button>
+            </div>
+        </div>
+        <form method="post" asp-action="Payment">
+            <input id="hiddenDiscountCode" type="hidden" name="discountCode" value="" />
+            <input type="hidden" name="orderid" value="@Model.Data.Id" />
+            <button type="submit" class="payment-btn submit-btn">پرداخت</button>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            $('.checkout-container .discount-btn').click(function(e) {
+                e.preventDefault();
+                var discountCode = $(".discount-code input[name='discountCode']").val();
+                if (discountCode) {
+                    $(".discount-code input[name='discountCode']").parent().removeClass('is-danger');
+                    var code = JSON.stringify({ code: discountCode });
+                    $.ajax({
+                        url: '/site/applyDiscountCode',
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data:code,
+                            success: function(res) {
+                                $('#discountValue').text((res.discountPrice).toLocaleString() + ' ریال');
+                                $('#finalAmount').text(res.finalAmount.toLocaleString() + ' ریال');
+                                $('.remove-btn').removeClass('hide');
+                                $('.discount-btn').addClass('hide');
+                                $('#hiddenDiscountCode').val(discountCode);
+                                $.toast({
+                                    heading: 'کد تخفیف با موفقیت اعمال شد',
+                                    text: '',
+                                    position: 'top-right',
+                                    loaderBg: '#ff6849',
+                                    icon: 'success',
+                                    hideAfter: 2000,
+                                    stack: 6
+                                });
+                            },
+                            error: function(err) {
+                                return $.toast({
+                                    heading: 'خطا',
+                                    text: !err.responseJSON ? "در ارسال پیام شما مشکلی به وجود آمده است." : err.responseJSON.message,
+                                    position: 'top-right',
+                                    loaderBg: '#ff6849',
+                                    icon: 'error',
+                                    hideAfter: 3500,
+                                });
+                            },
+                        });
+                } else {
+                    $(".discount-code input[name='discountCode']").parent().addClass('is-danger');
+                }
+            });
+
+            $('.checkout-container .remove-btn').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/removeDiscountCode/@Model.Data.Id',
+                    type: 'Delete',
+                    dataType: 'json',
+                    contentType: 'application/x-www-form-urlencoded',
+                    success: function(res) {
+                        $('#discountValue').text((res.discountPrice).toLocaleString() + ' ریال');
+                        $('#finalAmount').text(res.finalAmount.toLocaleString() + ' ریال');
+                        $('.discount-btn').removeClass('hide');
+                        $('.remove-btn').addClass('hide');
+                        $.toast({
+                            heading: 'کد تخفیف با موفقیت حذف شد',
+                            text: '',
+                            position: 'top-right',
+                            loaderBg: '#ff6849',
+                            icon: 'success',
+                            hideAfter: 2000,
+                            stack: 6
+                        });
+                    },
+                    error: function(err) {
+                        return $.toast({
+                            heading: 'خطا',
+                            text: !err.responseJSON ? "در ارسال پیام شما مشکلی به وجود آمده است." : err.responseJSON.message,
+                            position: 'top-right',
+                            loaderBg: '#ff6849',
+                            icon: 'error',
+                            hideAfter: 3500,
+                        });
+                    },
+                });
+            });
+        });
+    </script>
+}
+

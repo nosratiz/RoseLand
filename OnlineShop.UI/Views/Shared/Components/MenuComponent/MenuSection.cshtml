@@ -1,0 +1,35 @@
+@model OnlineShop.Application.General.Menu.ModelDto.MenuViewModel
+
+@{
+    var url = ViewBag.url;
+}
+
+<div class="container level">
+    <div class="level-right menu-container">
+        <div class="logo-container">
+            <img src="@Model.AppSettingDto.Logo" alt="Rose Land Luxury" class="logo" />
+        </div>
+        <nav>
+            <ul>
+                @foreach (var item in Model.Menu)
+                {
+                    <li>
+                        <a class="@(item.UniqueName==url?" Active":"")" asp-controller="@item.Controller"
+                           asp-action="@item.Action"><span>@item.Title</span></a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+    <div class="level-left">
+        <a asp-controller="Home" asp-action="Cart" class="cart-container">
+            <span class="icon">
+                <span id="basketCount" class="value">@Model.BasketShopViewModel.Count</span>
+            </span>
+            <div class="column">
+                <span class="title">سبد خرید</span>
+                <span id="basketprice" class="total-value">@(Model.BasketShopViewModel.Count!=0? Model.BasketShopViewModel.Sum(x => x.Count * x.Price).ToString("##,###"):"0") تومان</span>
+            </div>
+        </a>
+    </div>
+</div>

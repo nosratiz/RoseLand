@@ -1,0 +1,21 @@
+@{
+ViewData["Title"] = "PaymentVerification";
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container zarinpal-status">
+    <!-- Successfull -->
+     <div class="status confirmed">
+          <span class="icon"></span>
+          <p class="description">پرداخت شما با موفقیت انجام پذیرفت.</p>
+          <p class="description">شماره تراکنش: <b>۱۲۳۱۳۱۲۱۳</b></p>
+        </div> 
+    <div class="status rejected">
+        <span class="icon"></span>
+        <p class="description">پرداخت شما ناموفق بوده است.</p>
+        <p class="description">شماره تراکنش: <b>۱۲۳۱۳۱۲۱۳</b></p>
+    </div>
+
+    <a href="/" class="btn">بازگشت به صفحه اصلی</a>
+</div>

@@ -1,0 +1,50 @@
+﻿@using OnlineShop.Common.Helper
+@model List<OnlineShop.Application.General.Notifications.ModelDto.NotificationDto>
+
+@{
+    ViewData["Title"] = "لیست اعلان ها";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت اعلان ها</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">لیست اعلان ها</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="box">
+    <div class="box-header">
+        <h4 class="box-title">اعلان ها</h4>
+    </div>
+    <div class="box-body">
+        <div class="timeline timeline-single-column timeline-single-full-column">
+            @foreach (var item in Model)
+            {
+                <div class="timeline-item timeline-item-arrow-sm">
+                    <div class="timeline-point timeline-point-primary">
+                        <i class="ion ion-chatbubble-working"></i>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">@item.Description</h3>
+                            </div>
+                            <div class="panel-body">
+                                @DateTimeConvertor.LongPersianDate(item.CreateDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

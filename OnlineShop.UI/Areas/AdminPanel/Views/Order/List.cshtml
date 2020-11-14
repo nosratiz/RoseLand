@@ -1,0 +1,196 @@
+﻿@using OnlineShop.Common.Enum
+@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.Shop.Orders.ModelDto.OrderDto>>
+
+@{
+    ViewData["Title"] = "لیست سفارشات";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+    ViewBag.model = Model.Parameter;
+}
+
+<link rel="stylesheet" type="text/css" href="/assets/vendor_components/datatable/datatables.min.css" />
+<link href="/assets/vendor_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت سفارشات </h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">لیست سفارشات</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+
+                </div>
+                @if (Model.Data.Items.Any())
+                {
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <div class="dataTables_wrapper container-fluid dt-bootstrap4"></div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length">
+                                        <form asp-action="List" method="get">
+                                            <label>
+                                                جستجو:
+
+                                                <input name="search" type="search" class="form-control form-control-sm" />
+
+                                            </label>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+
+                                </div>
+                            </div>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>شماره سفارش</th>
+                                        <th>وضعیت سفارش</th>
+                                        <th>تاریخ تحویل</th>
+                                        <th>تاریخ سفارش</th>
+
+                                        <th>مبلغ پرداختی</th>
+                                        <th>نام سفارش دهنده </th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Data.Items)
+                                    {
+                                        <tr id="tr_@item.Id">
+
+
+                                            <td>@item.OrderNumber</td>
+                                            <td>
+                                                <select id="orderStatus" data-id="@item.Id" asp-for="@item.OrderStatus" class="form-control">
+                                                    <option value="1" data-value="1">لغو شده</option>
+                                                    <option value="2" data-value="1">در انتظار تایید</option>
+                                                    <option value="3" data-value="1">تایید شده</option>
+                                                    <option value="4" data-value="1">در حال ارسال</option>
+                                                    <option value="5" data-value="1">تحویل داده شده</option>
+                                                    <option value="6" data-value="1">در سبد خرید</option>
+                                                    <option value="7" data-value="1">آماده پرداخت</option>
+
+                                                </select>
+                                            </td>
+                                            <td>@item.DeliveryDate</td>
+                                            <td>@item.CreateDate</td>
+                                            <td>@item.FinalAmount.ToString("##,###") تومان</td>
+                                            <td>@($"{item.UserAddress.User.FullName}")</td>
+                                            <td>
+                                                <div class="btn-group mb-5">
+                                                    <a asp-action="GetOrder" asp-route-id="@item.Id" class="btn btn-rounded btn-info btn-sm" >
+                                                        مشاهده سفارش
+                                                    </a>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-5">
+
+                                    <div class="dataTables_info" id="complex_header_info" role="status" aria-live="polite">
+                                        نمایش
+                                        @( ((Model.Data.Meta.CurrentPage - 1) * Model.Data.Meta.ObjectInPage) + 1) تا @(Model.Data.Meta.CurrentPage * Model.Data.Meta.PageSize) از @Model.Data.Meta.TotalCount ورودی
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-7">
+                                    <partial name="_ListPagination" model="Model.Data.Meta" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <!-- /.box-header -->
+
+            </div>
+        </div>
+    </div>
+</section>
+@section script
+{
+    <script src="/assets/vendor_components/sweetalert/sweetalert.min.js"></script>
+
+
+    <script>
+
+
+
+        $('#orderStatus').focus(function () {
+
+        }).change(function () {
+            $(this).blur();
+            var id = $(this).attr("data-id");
+            console.log(id);
+            var val = this.value;
+            console.log(val);
+
+            var orderObject = JSON.stringify({
+                Id: parseInt(id),
+                OrderStatus:parseInt(val)
+            });
+
+            swal({
+                title: "تغییر وضعیت سفارش",
+                text: `ایا مطمئن از تغییر وضعیت سفارش ${name} هستید`,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "بله، آن را تغییر ب!",
+                cancelButtonText: "نه، لغو لطفا!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: '/Adminapi/order/',
+                            method: 'put',
+                            contentType: 'application/json',
+                            data: orderObject,
+                            success: function (result) {
+                                swal("تغییر وضعیت سفارش!", "عملیات با موفیقت انجام شد", "success");
+                            },
+                            error: function (request) {
+
+                                swal("خطا", request.responseJSON.message, "error");
+                            }
+                        });
+
+                    } else {
+                        swal("لغو شد", "عملیات لغو شد:)", "error");
+                    }
+                });
+        });
+
+
+    </script>
+
+}
+
+

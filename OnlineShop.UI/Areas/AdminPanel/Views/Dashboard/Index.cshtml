@@ -1,0 +1,238 @@
+﻿@using System.ComponentModel
+@using OnlineShop.Common.Enum
+@using OnlineShop.Common.Helper
+@model OnlineShop.Application.Dashboard.ModelDto.DashboardViewModel
+
+@{
+    ViewData["Title"] = "داشبورد";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-3 col-12">
+        <div class="box box-body bg-danger pull-up">
+            <div class="flexbox align-items-end pt-30">
+                <div>
+                    <span class="font-size-30 countnm">@Model.StatisticDto.TotalUser</span>
+                    <h6 class="text-uppercase text-white-50 mb-0">مجموع کاربر</h6>
+                </div>
+                <span class="iconsmind-Add-UserStar font-size-80 text-white-50"></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-12">
+        <div class="box box-body bg-warning pull-up">
+            <div class="flexbox align-items-end pt-30">
+                <div>
+                    <span class="font-size-30 countnm">@Model.StatisticDto.TotalBlog</span>
+                    <h6 class="text-uppercase text-white-50 mb-0">مجموع وبلاگ</h6>
+                </div>
+                <span class="iconsmind-File-Cloud font-size-80 text-white-50"></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-12">
+        <div class="box box-body bg-dark pull-up">
+            <div class="flexbox align-items-end pt-30">
+                <div>
+                    <span class="font-size-30 countnm">@Model.StatisticDto.TotalProduct</span>
+                    <h6 class="text-uppercase text-white-50 mb-0">مجموع محصولات</h6>
+                </div>
+                <span class="iconsmind-Gift-Box font-size-80 text-white-50"></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-12">
+        <div class="box box-body bg-info pull-up">
+            <div class="flexbox align-items-end pt-30">
+                <div>
+                    <span class="font-size-30 countnm">@Model.StatisticDto.TotalOrder</span>
+                    <h6 class="text-uppercase text-white-50 mb-0">مجموع سفارشات</h6>
+                </div>
+                <span class="iconsmind-Shopping-Cart font-size-80 text-white-50"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-xl-6">
+        <div class="box">
+            <div class="box-header with-border">
+                <h4 class="box-title">اخرین سفارشات</h4>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table id="invoice-list" class="table table-hover no-wrap" data-page-size="10">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>مبلغ</th>
+                                <th>وضعیت</th>
+                                <th>مشاهده</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.Orders)
+                            {
+                                <tr>
+                                    <td>@order.UserAddress.User.FullName</td>
+                                    <td>@order.FinalAmount.ToString("##,###") تومان</td>
+                                    <td><span class="@(order.OrderStatus<=OrderStatus.Delivered?"label label-success":"label label-danger")">@EnumConvertor.GetDisplayName(order.OrderStatus)</span></td>
+                                    <td>	<a asp-controller="Order" asp-action="EditOrder" asp-route-id="@order.Id"><i class="fa fa-file-text-o" aria-hidden="true"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-6">
+        <div class="box">
+            <div class="box-header with-border">
+                <h4 class="box-title">ثبت نام جدید</h4>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table id="invoice-list" class="table table-hover no-wrap" data-page-size="10">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>ایمیل</th>
+                                <th>تاریخ ثبت نام</th>
+                                <th>مشاهده</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr>
+                                    <td>@user.FullName</td>
+                                    <td>@user.Email</td>
+                                    <td>@DateTimeConvertor.PersianDateTime(user.RegisterDate)</td>
+                                    <td>	<a asp-controller="User" asp-action="EditUser" asp-route-id="@user.Id"><i class="fa fa-file-text-o" aria-hidden="true"></i></a></td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-12">
+        <div class="box">
+            <div class="box-body">
+                <h4 class="box-title">وضعیت هفته گذشته</h4>
+                <div>
+                    <canvas id="line-chart1" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-12">
+        <div class="box">
+            <div class="box-header no-border">
+                <h4>مجموع درآمد</h4>
+                <div class="box-body pb-40">
+                    <h1 class="text-center font-size-50"><small>تومان</small>@Model.StatisticDto.TotalRevenue.ToString("##,###")</h1>
+                </div>
+                <div class="box-body p-0 overflow-h">
+                    <div>
+                        <canvas id="bar-chart1" height="130"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section script
+{
+    <script src="~/assets/vendor_components/chart.js-master/Chart.min.js"></script>
+
+    <script>
+        @{
+            List<int> registerUser=new List<int>();
+            List<int> totalView=new List<int>();
+            List<int> totalOrder=new List<int>();
+            List<string> date=new List<string>();
+            List<long> totalSale=new List<long>();
+
+            int count = 5- Model.DailyStatistic.Count;
+            Model.DailyStatistic.ForEach(x =>
+            {
+
+                registerUser.Add(x.RegisterUser);
+                totalView.Add(x.TotalView);
+                totalOrder.Add(x.TotalOrder);
+                date.Add(DateTimeConvertor.PersianDateTime(x.Date));
+                totalSale.Add(x.TotalRevenue);
+            });
+        }
+
+        $(document).ready(function () {
+            let iteratorNormalCompletion2 = new Chart(document.getElementById("line-chart1"), {
+                type: 'line',
+                data: {
+                    labels: @Json.Serialize(date),
+                    datasets: [{
+                            data: @Json.Serialize(registerUser),
+                            label: "ثبت نام کاربران",
+                            borderColor: "#689f38",
+                            fill: false
+                        }, {
+                            data: @Json.Serialize(totalView),
+                            label: "بازدید سایت",
+                            borderColor: "#ff8f00",
+                            fill: false
+                        }, {
+                            data: @Json.Serialize(totalOrder),
+                            label: "تعداد فروش",
+                            borderColor: "#ee1044",
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: ''
+                    }
+                }
+            });
+
+
+            let iteratorNormalCompletion = new Chart(document.getElementById("bar-chart1"), {
+                type: 'bar',
+                data: {
+                    labels: @Json.Serialize(date),
+                    datasets: [
+                        {
+                            label: "مجموعه فروش",
+                            backgroundColor: ["#689f38", "#38649f","#389f99","#ee1044","#ff8f00"],
+                            data: @Json.Serialize(totalSale)
+                        }
+                    ]
+                },
+                options: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: ''
+                    }
+                }
+            });
+
+        });
+    </script>
+
+
+
+}
+

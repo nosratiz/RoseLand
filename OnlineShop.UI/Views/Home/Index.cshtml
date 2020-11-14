@@ -1,0 +1,28 @@
+﻿@{
+ViewData["Title"] = "";
+}
+
+<div class="banner-container">
+  @await Component.InvokeAsync("SliderComponent")
+</div>
+<!-- Widgets -->
+<div class="widget-container">
+  <div class="level">
+    <a href="#" class="level-items"><span>پیونی</span></a>
+    <a href="#" class="level-items"><span>بهاری</span></a>
+    <a href="#" class="level-items"><span>ارکیده</span></a>
+  </div>
+</div>
+<!-- Products -->
+@await Component.InvokeAsync("MostVisitedProductComponent")
+<!-- Ad -->
+<div class="ad-container">
+  <div class="container">
+    <h3 class="ad-title">همین الان اقدام به خرید آنلاین کنید.</h3>
+    <a class="ad-btn__container" href="">خرید آنلاین</a>
+  </div>
+</div>
+<!-- Products -->
+@await Component.InvokeAsync("MostSailedProductComponent")
+<!-- News -->
+@await Component.InvokeAsync("BlogComponent")

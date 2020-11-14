@@ -1,0 +1,33 @@
+﻿@model OnlineShop.Application.General.Footer.FooterViewModel
+
+
+<footer>
+    <div class="container level">
+        <div class="level-items">
+            <h3 class="footer-title">تماس با ما</h3>
+            <p class="footer-description">آدرس: @Model.AppSetting.Address</p>
+            <p class="footer-description">شماره تماس: @Model.AppSetting.PhoneNumber</p>
+            <p class="footer-description">ساعت تماس 9 الي 22</p>
+        </div>
+        <div class="level-items">
+            <h3 class="footer-title">شبکه‌های اجتماعی</h3>
+            <a href="https://www.instagram.com/roselandluxury/" class="footer-description" target="_blank">اینستاگرام</a>
+            <a href="https://api.whatsapp.com/send?phone=989354229605&text=&source=&data=&app_absent=" class="footer-description" target="_blank">اتس آپ</a>
+        </div>
+        <div class="level-items">
+            <h3 class="footer-title">لینک های مفید</h3>
+            <a asp-controller="Blog" asp-action="BlogList" class="footer-description">  لیست وبلاگ</a>
+            <a asp-controller="Product" asp-action="ProductList" class="footer-description">  لیست محصولات</a>
+        </div>
+        <div class="level-items">
+            <img src="/img/enamad.jpg" style="height: 75px;margin-bottom: 20px" class="zarinpal-logo" />
+
+            <img src="/img/ZarinPal-Logo.svg" alt="Zarinpal" class="zarinpal-logo" />
+        </div>
+    </div>
+    <p class="copyright-text">@Model.AppSetting.CopyRight</p>
+</footer>
+
+<div id="menu-container">
+         
+</div>

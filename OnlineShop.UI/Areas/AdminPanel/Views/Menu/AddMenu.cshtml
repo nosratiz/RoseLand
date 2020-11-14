@@ -1,0 +1,144 @@
+﻿@model List<OnlineShop.Application.General.Menu.ModelDto.MenuDto>
+
+@{
+    ViewData["Title"] = "افزودن منو";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت منو</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="User" asp-action="Index">لیست منوها</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">افزودن منو</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="box">
+
+                <div class="box-header with-border">
+                    <form id="menuForm">
+                        <div class="box-body">
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label>عنوان</label>
+                                        <div>
+                                            <input type="text" id="title" name="title" class="form-control" placeholder="عنوان">
+                                        </div>
+                                        <span id="span-title" class="help-block"></span>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label>نام منحصر به فرد</label>
+                                        <div>
+                                            <input type="text" id="uniqueName" name="uniqueName" class="form-control" placeholder="نام منحصر به فرد">
+                                        </div>
+                                        <span id="span-uniqueName" class="help-block"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label>توضیحات</label>
+                                        <textarea rows="5" name="description" id="description" cols="5" class="form-control" placeholder="ناحیه متن"></textarea>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <label>سرمنو</label>
+                                        <select name="ParnetId" id="ParnetId" asp-items="@(new SelectList(Model,"Id","Title"))" class="form-control">
+                                            <option value="">یک سر دسته انتخاب کنید</option>
+
+                                        </select>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6">
+                                            <div class="form-group">
+                                                <label>شماره نمایش</label>
+                                                <div>
+                                                    <input type="number" id="sortOrder" name="sortOrder" onkeyup="PlusNumber(this);" class="form-control" placeholder="شماره نمایش">
+                                                </div>
+                                                <span id="span-sortOrder" class="help-block"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6">
+                                            <div class="form-group">
+                                                <h5>وضیعت نمایش </h5>
+                                                <div class="controls">
+                                                    <input type="checkbox" id="checkbox_1" checked="false" name="isPublish" value="false">
+                                                    <label for="checkbox_1">فعال</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="form-group">
+                                        <div>
+                                            <div id="body" name="body" style="height: 150px;"></div>
+                                        </div>
+                                        <span id="span-body" class="help-block"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="box-footer text-right">
+                                        <a asp-action="MenuList" type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                            <i class="ti-trash"></i> لغو
+                                        </a>
+                                        <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                            <i class="ti-save-alt"></i> افزودن
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section script
+{
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="~/Admin/js/Validation.js"></script>
+    <script src="~/Admin/js/menu/MenuCommand.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#body').summernote({
+                height: 160
+            });
+        });
+    </script>
+}

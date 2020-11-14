@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewData["Title"] = "ثبت نام";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container auth-container register-container level">
+    <div class="level-items">
+        <h1 class="form-title">عضویت کاربران</h1>
+    </div>
+    <div class="level-items">
+        <form id="registerForm" novalidate>
+            <div class="field">
+                <p class="control">
+                    <label class="label">نام </label>
+                    <input name="name" class="input" type="text" />
+                </p>
+                <p class="help is-danger hide">
+                    نام  خود را به درستی وارد نمایید.
+                </p>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">نام خانوادگی</label>
+                    <input name="family" class="input" type="tel" />
+                </p>
+                <p class="help is-danger hide">
+                    نام خانوادگی خود را به درستی وارد نمایید.
+                </p>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">ایمیل</label>
+                    <input name="email" class="input" type="email" />
+                </p>
+                <p class="help is-danger hide">
+                    ایمیل خود را به درستی وارد نمایید.
+                </p>
+            </div>
+
+            <div class="field">
+                <p class="control">
+                    <label class="label">رمز عبور</label>
+                    <input name="password" class="input" type="password" />
+                </p>
+                <p class="help is-danger hide">
+                    رمز عبور خود را به درستی وارد نمایید.
+                </p>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success">
+                        ثبت نام
+                    </button>
+                </p>
+            </div>
+            <a class="redirect-link" asp-action="SignIn">ورود به حساب کاربری</a>
+        </form>
+    </div>
+</div>

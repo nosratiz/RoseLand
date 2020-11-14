@@ -1,0 +1,73 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Application.General.ContactUs.ModelDto.ContactUsDto>
+@{
+    ViewData["Title"] = "GetContactUs";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+
+@if (Model.Success)
+{
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <h3 class="page-title">مدیریت تماس با ما</h3>
+            <div class="d-inline-block align-items-center">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                        <li class="breadcrumb-item active" aria-current="page"><a asp-controller="ContactUs" asp-action="ContactUsList">لیست پیام ها</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"> پیام </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="row">
+
+            <div class="col-12">
+
+                <div class="box">
+      
+                        <div class="mailbox-controls with-border clearfix mt-15">                
+                            <div class="left-float">
+                        
+                            </div>
+                            <div class="right-float">
+                                <div class="btn-group">
+                                  <a asp-action="ContactUsList" type="button" class="btn btn-outline btn-sm" data-toggle="tooltip" data-container="body" title="بازگشت">
+                                        <i class="fa fa-share"></i></a>
+                                </div>
+                            </div>
+                            <!-- /.btn-group -->
+
+                        </div>
+
+              
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <div class="mailbox-read-info bb-0 clearfix">
+
+                                <h5 class="no-margin">
+                                    @Model.Data.Name<br>
+                                    <small>از: @Model.Data.Email</small>
+                                    <span class="mailbox-read-time pull-right">@DateTimeConvertor.LongPersianDate(Model.Data.CreateDate) </span>
+                                </h5>
+                            </div>
+                            <!-- /.mailbox-read-info -->
+                            <div class="mailbox-read-message">
+                                @Model.Data.Message
+                            </div>
+                            <!-- /.mailbox-read-message -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+}
+
+

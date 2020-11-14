@@ -1,0 +1,294 @@
+﻿@using OnlineShop.Common.Helper
+@model List<OnlineShop.Application.UserAddress.ModelDto.UserAddressDto>
+@{
+    ViewData["Title"] = "MyOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="checkout-container">
+    <div class="container">
+        <h2>اقلام سبد خرید</h2>
+        <a href="#" class="add-new-address">
+            <span class="address-icon"></span>
+            افزودن آدرس جدید
+        </a>
+        <div class="address-holder">
+            @{ int rownNmber = 0; }
+            @foreach (var Useraddress in Model)
+            {
+                <div data-id="@Useraddress.Id" id="@(rownNmber++)" class="@(rownNmber ==1 ?"items active":"items") ">
+                    <span class="icon"></span>
+                    <div>گیرنده: @Useraddress.User.FullName</div>
+                    <div>@Useraddress.Address</div>
+                    <div>شماره تماس: @Useraddress.Mobile</div>
+                </div>
+
+            }
+        </div>
+        <h4>تعیین زمان ارسال</h4>
+        <div class="time-picker">
+            <div class="date-row">
+                @for (int i = 1; i < 7; i++)
+                {
+                    <div data-id="@i" data-date="@DateTime.Now.AddDays(i)" class="@(i==1 ? "date active":"date")">@DateTimeConvertor.LongPersianDate(DateTime.Now.AddDays(i))</div>
+                }
+            </div>
+            @for (int i = 1; i < 7; i++)
+            {
+                <div tab-id="@i" class="@(i==1?"tab-container active show":"tab-container")">
+                    <div class="time-row">
+                        <div data-id="1" class="time active">
+                            <div class="radio"></div>
+                            <label>ساعت ۹ - ۱۲</label>
+                        </div>
+                        <div data-id="2" class="time">
+                            <div class="radio"></div>
+                            <label>ساعت ۱۲ - ۱۵</label>
+                        </div>
+                        <div data-id="3" class="time">
+                            <div class="radio"></div>
+                            <label>ساعت ۱۲ - ۱۵</label>
+                        </div>
+                        <div data-id="4" class="time">
+                            <div class="radio"></div>
+                            <label>ساعت ۱۸ - ۲۱</label>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <button id="AddOrder" class="submit-btn">ادامه خرید</button>
+    </div>
+    <div class="address-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>جایگزین <span></span></h2>
+                <div class="icon"></div>
+            </div>
+            <div class="modal-body">
+                <div class="address-container profile">
+                    <h1>افزودن آدرس جدید</h1>
+
+                    <form id="addAddressModal" method="post" novalidate="" class="address-form">
+                        <div class="field">
+                            <p class="control">
+                                <label class="label">نام تحویل گیرنده</label>
+                                <input name="name" class="input" type="text" />
+                            </p>
+                            <p class="help is-danger hide">
+                                نام تحویل گیرنده را به درستی وارد نمایید.
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control">
+                                <label class="label">شماره همراه</label>
+                                <input name="tel" class="input" type="tel" maxlength="11" />
+                            </p>
+                            <p class="help is-danger hide">
+                                شماره همراه را به درستی وارد نمایید.
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control">
+                                <label class="label">کد پستی</label>
+                                <input name="postalCode" class="input" type="text" maxlength="10" />
+                            </p>
+                            <p class="help is-danger hide">
+                                کد پستی را به درستی وارد نمایید.
+                            </p>
+                        </div>
+
+                        <div class="field">
+                            <p class="control">
+                                <label class="label">آدرس</label>
+                                <input name="address" class="input" type="text" />
+                            </p>
+                            <p class="help is-danger hide">
+                                آدرس را به درستی وارد نمایید.
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control">
+                                <label class="label">توضیحات</label>
+                                <textarea rows="6" name="description" class="input"></textarea>
+                            </p>
+                        </div>
+                        <button type="submit" class="submit-btn">درج آدرس</button>
+                        <button class="dismiss-btn">انصراف</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            var selectedAddress = @Model.FirstOrDefault()?.Id;
+            var selectedDate = ' @($"{DateTime.Now.AddDays(1):G}")';
+            var selectedTime = 1;
+
+            $('.checkout-container .items').click(function (e) {
+                $('.checkout-container .items').removeClass('active');
+                $(this).addClass('active');
+                selectedAddress = $(this).attr('data-id');
+            });
+
+            $('.checkout-container .time-picker .date-row .date').click(function (e) {
+                $('.checkout-container .time-picker .date-row .date').removeClass('active');
+                $(this).addClass('active');
+                var id = $(this).attr('data-id');
+                selectedDate = $(this).attr('data-date');
+                $('.checkout-container .tab-container').removeClass('active');
+                $('.checkout-container .tab-container').removeClass('show');
+                $('.checkout-container .tab-container[tab-id=' + id + ']').addClass('active');
+                setTimeout(function () {
+                    $('.checkout-container .tab-container[tab-id=' + id + ']').addClass('show');
+                }, 100);
+            });
+
+            $('.checkout-container .time-row .time').click(function (e) {
+                $('.checkout-container .time-row .time').removeClass('active');
+                $(this).addClass('active');
+                selectedTime = $(this).attr('data-id');
+            });
+
+            $('#AddOrder').click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/Order',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: { UserAddressId: selectedAddress, DeliveryDate: selectedDate, DeliverPeriodTime: selectedTime },
+                    success: function (res) {
+                        window.location.href = '/payment';
+                    },
+                    error: function (err) {
+                       return  $.toast({
+                            heading: 'خطا',
+                            text: !err.responseJSON ? "در ارسال پیام شما مشکلی به وجود آمده است." : err.responseJSON.message,
+                            position: 'top-right',
+                            loaderBg: '#ff6849',
+                            icon: 'error',
+                            hideAfter: 3500,
+                        });
+                    },
+                });
+            });
+
+            $('.add-new-address').on('click', function (e) {
+                e.preventDefault();
+                $('.address-modal').addClass('active');
+            });
+
+            $('.address-modal .icon').click(function (e) {
+                $('.address-modal').removeClass('active');
+            });
+
+            $('#addAddressModal').on('submit', function (e) {
+                e.preventDefault();
+
+
+                var array = $(this).serializeArray(),
+                    isFormValid = true;
+
+                // remove form input
+                $('#addAddressModal .input').removeClass('is-danger');
+                $('#addAddressModal .input')
+                    .parent()
+                    .next()
+                    .addClass('hide');
+                // validate each input
+                if (!array[0].value) {
+                    $('#addAddressModal input[name=name]').addClass('is-danger');
+                    $('#addAddressModal input[name=name]')
+                        .parent()
+                        .next()
+                        .removeClass('hide');
+                    isFormValid = false;
+                }
+
+                if (!array[1].value && array[1].value.length !== 11) {
+                    $('#addAddressModal input[name=tel]').addClass('is-danger');
+                    $('#addAddressModal input[name=tel]')
+                        .parent()
+                        .next()
+                        .removeClass('hide');
+                    isFormValid = false;
+                }
+
+                if (!array[2].value && array[2].value.length !== 10) {
+                    $('#addAddressModal input[name=postalCode]').addClass('is-danger');
+                    $('#addAddressModal input[name=postalCode]')
+                        .parent()
+                        .next()
+                        .removeClass('hide');
+                    isFormValid = false;
+                }
+
+                if (!array[3].value) {
+                    $('#addAddressModal input[name=address]').addClass('is-danger');
+                    $('#addAddressModal input[name=address]')
+                        .parent()
+                        .next()
+                        .removeClass('hide');
+                    isFormValid = false;
+                }
+                console.log(isFormValid);
+
+                if (isFormValid) {
+                    isaddAddressFormLoading = true;
+                    if (isaddAddressFormLoading) {
+                        $('#addAddressModal .button').addClass('is-loading');
+                        $('#addAddressModal .button').prop('disabled', true);
+                    }
+
+                    var address = JSON.stringify({
+                        Name: array[0].value,
+                        Mobile: array[1].value,
+                        PostalCode: array[2].value,
+                        Address: array[3].value,
+                        Description: array[4].value
+                    });
+
+                    return $.ajax({
+                        url: '/profileApi/addAddress',
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data: address,
+                    })
+                        .done(function (res) {
+                            $('#addAddressModal .button').removeClass('is-loading');
+                            $('#addAddressModal .button').prop('disabled', false);
+                            $.toast({
+                                heading: 'آدرس شما با موفیقت افزوده شد',
+                                text: '',
+                                position: 'top-right',
+                                loaderBg: '#ff6849',
+                                icon: 'success',
+                                hideAfter: 2000,
+                                stack: 6
+                            });
+                            window.location.reload();
+                        })
+                        .fail(function (err) {
+                            $('#addAddressModal .button').removeClass('is-loading');
+                            $('#addAddressModal .button').prop('disabled', false);
+                            $.toast({
+                                heading: 'خطا',
+                                text: !err.responseJSON ? "در ارسال پیام شما مشکلی به وجود آمده است." : err.responseJSON.message,
+                                position: 'top-right',
+                                loaderBg: '#ff6849',
+                                icon: 'error',
+                                hideAfter: 3500,
+                            });
+                        });
+                }
+            });
+        });
+    </script>
+}

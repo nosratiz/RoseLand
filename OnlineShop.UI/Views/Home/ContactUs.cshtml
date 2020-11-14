@@ -1,0 +1,61 @@
+@model OnlineShop.Common.Result.Result<OnlineShop.Application.General.AppSetting.ModelDto.AppSettingDto>
+@{
+    ViewData["Title"] = " تماس با ما -";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="contact-container container">
+	<div id="map"></div>
+	<div class="level">
+			<div class="level-items">
+					<h1 class="form-title">تماس با ما</h1>
+					@*<p class="form-description">آدرس: @Model.Data.Address</p>
+					<p class="form-description">شماره تماس:@Model.Data.PhoneNumber </p>
+					<p class="form-description">ساعت تماس 9 الي 22</p>*@
+			</div>
+			<div class="level-items">
+					<form id="contactForm" novalidate>
+							<div class="field">
+									<label class="label">نام‌ و نام خانوادگی</label>
+									<div class="control">
+											<input name="fullName" class="input" type="text" />
+									</div>
+									<p class="help is-danger hide">
+											نام‌ و نام خانوادگی خود را به درستی وارد نمایید.
+									</p>
+							</div>
+							<div class="field">
+									<label class="label">ایمیل</label>
+									<div class="control">
+											<input name="email" class="input" type="email" />
+									</div>
+									<p class="help is-danger hide">
+											ایمیل خود را به درستی وارد نمایید.
+									</p>
+							</div>
+							<div class="field">
+									<label class="label">شماره تماس</label>
+									<div class="control">
+											<input name="phoneNumber" class="input" type="tel" />
+									</div>
+									<p class="help is-danger hide">
+											شماره تماس خود را به درستی وارد نمایید.
+									</p>
+							</div>
+							<div class="field">
+									<label class="label">متن پیام</label>
+									<div class="control">
+											<textarea class="textarea"></textarea>
+									</div>
+									<p class="help is-danger hide">
+											متن پیام خود را به درستی وارد نمایید.
+									</p>
+							</div>
+							<div class="control">
+									<button class="button is-link">ارسال پیام</button>
+							</div>
+					</form>
+			</div>
+		</div>
+</div>

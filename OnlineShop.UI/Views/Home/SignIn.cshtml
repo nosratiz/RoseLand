@@ -1,0 +1,51 @@
+﻿@{
+ViewData["Title"] = "صفحه ورود";
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container auth-container level">
+    <div class="level-items">
+        <h1 class="form-title">ورود کاربران</h1>
+    </div>
+    <div class="level-items">
+        <form id="loginForm" novalidate>
+            <div class="field">
+                <p class="control has-icons-right">
+                    <label class="label">ایمیل</label>
+                    <input name="email" class="input" type="email" />
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                </p>
+                <p class="help is-danger hide">
+                    ایمیل خود را به درستی وارد نمایید.
+                </p>
+            </div>
+            <div class="field">
+                <p class="control has-icons-right">
+                    <label class="label">رمز عبور</label>
+                    <input name="password" class="input" type="password" />
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                </p>
+                <p class="help is-danger hide">
+                    رمز عبور خود را به درستی وارد نمایید.
+                </p>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success">
+                        ورود
+                    </button>
+                </p>
+            </div>
+            <div class="field">
+                <div class="redirect-link">
+                    <a asp-action="ForgetPassword">فراموشی رمز عبور / </a>
+                    <a asp-action="SignUp">ثبت نام</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

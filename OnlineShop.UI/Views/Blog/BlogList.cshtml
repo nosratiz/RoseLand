@@ -1,0 +1,42 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.General.Blog.ModelDto.BlogDto>>
+@{
+    ViewData["Title"] = "وبلاگ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.model = Model.Parameter;
+}
+
+<div class="news-container">
+    <div class="title-container">
+        <h1>وبلاگ</h1>
+    </div>
+    <div class="level container">
+        <div class="level-right sidebar">
+            @await Component.InvokeAsync("MostVisitedBlogComponent")
+
+            @await Component.InvokeAsync("BlogCategoryComponent")
+
+        </div>
+        <div class="level-left">
+            <div class="row level">
+                @foreach (var item in Model.Data.Items)
+                {
+                    <div class="items">
+                        <figure>
+                            <span class="date">@DateTimeConvertor.PersianDateTime(item.CreateDate)</span>
+                            <img src="@item.Image" alt="@item.Title" />
+                        </figure>
+                        <div class="caption">
+                            <span class="author">نویسنده: @item.User.FullName</span>
+                            <h2 class="news-title">@item.Title</h2>
+                            <p class="news-description">@item.Description</p>
+                            <a asp-action="BlogDetail" asp-controller="Blog" asp-route-slug="@item.Slug" class="btn">بیشتر بخوانید</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+		<partial name="_BlogListPagination" model="Model.Data.Meta" /> 
+</div>
+

@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>@ViewData["Title"] </title>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="~/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="~/Admin/css/bootstrap-extend.css">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Admin/css/master_style.css">
+
+    <!-- CrmX Admin skins -->
+    <link rel="stylesheet" href="~/Admin/css/skin-color.css">
+
+
+    <link href="~/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css" rel="stylesheet">
+
+
+</head>
+<body class="rtl light-skin sidebar-mini theme-purple onlyfull" style="height: auto; min-height: 100%;">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <div class="art-bg">
+            <img src="" alt="" class="art-img light-img">
+            <img src="" alt="" class="art-img dark-img">
+        </div>
+
+        <header class="main-header">
+            <!-- Logo -->
+            <a asp-controller="Dashboard" asp-action="Index" class="logo">
+                <!-- mini logo -->
+                <div class="logo-mini">
+                    <span class="light-logo"><img src="/images/logo-light.png" alt="logo"></span>
+                    <span class="dark-logo"><img src="/images/logo-dark.png" alt="logo"></span>
+                </div>
+                <!-- logo-->
+                <div class="logo-lg">
+                    <span class="light-logo"><img src="/images/logo-light-text.png" alt="logo"></span>
+                    <span class="dark-logo"><img src="/images/logo-dark-text.png" alt="logo"></span>
+                </div>
+            </a>
+            <!-- Header Navbar -->
+            <partial name="/Areas/Adminpanel/Views/NavBar/HeaderMenu.cshtml" />
+        </header>
+
+
+        <!-- Left side column. contains the logo and sidebar -->
+        <partial name="/Areas/Adminpanel/Views/NavBar/SideBarMenu.cshtml" />
+
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div class="container-full">
+                <!-- Content Header (Page header) -->
+                <div class="content-header">
+                    @RenderBody()
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery 3 -->
+    <script src="~/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.js"></script>
+
+    <!-- fullscreen -->
+    <script src="~/assets/vendor_components/screenfull/screenfull.js"></script>
+
+    <!-- popper -->
+    <script src="~/assets/vendor_components/popper/dist/popper.min.js"></script>
+
+    <!-- Bootstrap 4.0-->
+    <script src="~/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- SlimScroll -->
+    <script src="~/assets/vendor_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- FastClick -->
+    <script src="~/assets/vendor_components/fastclick/lib/fastclick.js"></script>
+
+    <!-- CrmX Admin App -->
+    <script src="~/Admin/js/template.js"></script>
+
+    <!-- CrmX Admin for demo purposes -->
+    <script src="~/Admin/js/demo.js"></script>
+    <script src="~/Admin/js/persian.min.js"></script>
+    <script src="~/Admin/js/Notification/NotificationCommand.js"></script>
+
+    <script src="~/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            ConvertNumberToPersian();
+        });
+
+        function ConvertNumberToPersian() {
+            var persian = { 0: '۰', 1: '۱', 2: '۲', 3: '۳', 4: '۴', 5: '۵', 6: '۶', 7: '۷', 8: '۸', 9: '۹' };
+            function traverse(el) {
+                var i;
+                if (el.nodeType === 3) {
+                    var list = el.data.match(/[0-9]/g);
+                    if (list != null && list.length !== 0) {
+                        for (i = 0; i < list.length; i++)
+                            el.data = el.data.replace(list[i], persian[list[i]]);
+                    }
+                }
+                for (i = 0; i < el.childNodes.length; i++) {
+                    traverse(el.childNodes[i]);
+                }
+            }
+            traverse(document.body);
+        }
+    </script>
+
+
+    @await RenderSectionAsync("script", false)
+</body>
+
+</html>

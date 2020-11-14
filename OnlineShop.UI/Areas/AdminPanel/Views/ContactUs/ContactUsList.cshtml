@@ -1,0 +1,156 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Common.Helper.PagedList<OnlineShop.Application.General.ContactUs.ModelDto.ContactUsDto>>
+@{
+    ViewData["Title"] = "لیست پیام تماس با ما";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+
+    ViewBag.model = Model.Parameter;
+}
+
+<link rel="stylesheet" type="text/css" href="/assets/vendor_components/datatable/datatables.min.css" />
+<link href="/assets/vendor_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت تماس با ما</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">لیست پیام ها</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <div class="dataTables_wrapper container-fluid dt-bootstrap4"></div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="dataTables_length">
+                                    <form asp-action="ContactUsList" method="get">
+                                        <label>
+                                            جستجو:
+
+                                            <input name="search" type="search" class="form-control form-control-sm" />
+
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+
+
+                            </div>
+                        </div>
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+
+                                    <th>نام</th>
+                                    <th>ایمیل</th>
+                                    <th>تاریخ پیام</th>
+                                    <th>مدیریت</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Data.Items)
+                                {
+                                    <tr>
+
+                                        <td>@item.Name</td>
+                                        <td>@item.Email</td>
+                                        <td>@DateTimeConvertor.ShortPersianDay(item.CreateDate)</td>
+                                        <td>
+                                            <div class="btn-group mb-5">
+                                                <button type="button" class="btn btn-sm btn-dark dropdown-toggle" data-toggle="dropdown">عملیات</button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" asp-action="GetContactUs" asp-route-id="@item.Id">مشاهده پیام</a>
+                                                    <a class="dropdown-item" onclick='Delete(@item.Id,"@item.Name")'>حذف</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-5">
+
+                                <div class="dataTables_info" id="complex_header_info" role="status" aria-live="polite">نمایش@( ((Model.Data.Meta.CurrentPage - 1) * Model.Data.Meta.ObjectInPage) + 1) تا @(Model.Data.Meta.CurrentPage * Model.Data.Meta.PageSize) از @Model.Data.Meta.TotalCount ورودی</div>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <partial name="_ContactUsPagination" model="Model.Data.Meta" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+@section script
+{
+    <script src="/assets/vendor_components/sweetalert/sweetalert.min.js"></script>
+    <script>
+        function Delete(id, name) {
+
+            //Parameter
+
+            swal({
+                title: "حذف پیام",
+                text: `ایا مطمئن از حذف پیام ${name} هستید`,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "بله، آن را حذف کنید!",
+                cancelButtonText: "نه، لغو لطفا!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: '/AdminPanel/ContactUs/' + id,
+                            method: 'DELETE',
+                            contentType: 'application/json',
+                            success: function (result) {
+                                swal("پاک شد!", "عملیات با موفیقت انجام شد", "success");
+                            },
+                            error: function (request) {
+
+                                swal("خطا", request.responseJSON.message, "error");
+                            }
+                        });
+
+                    } else {
+                        swal("لغو شد", "عملیات لغو شد:)", "error");
+                    }
+                });
+
+
+        }
+
+    </script>
+
+}

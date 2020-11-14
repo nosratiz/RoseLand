@@ -1,0 +1,194 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Application.Users.ModelDto.ProfileViewModel
+@{
+    ViewData["Title"] = "پروفایل";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت کاربران</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">پروفایل کاربر</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+
+    <div class="row">
+        <div class="col-12 col-lg-7 col-xl-8">
+
+            <div class="nav-tabs-custom box-profile">
+                <ul class="nav nav-tabs">
+                    <li><a class="active" href="#usertimeline" data-toggle="tab">سفارشات</a></li>
+                    <li><a href="#activity" data-toggle="tab">آدرس ها</a></li>
+
+
+                    <li><a href="#comment" data-toggle="tab">نظرات</a></li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <div class="active tab-pane" id="usertimeline">
+                        <div style="height: 500px" class="publisher publisher-multi bg-white b-1 mb-30">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>شماره سفارش</th>
+                                        <th>وضعیت سفارش</th>
+                                        <th>تاریخ تحویل</th>
+                                        <th>تاریخ سفارش</th>
+
+                                        <th>مبلغ پرداختی</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Order)
+                                    {
+                                        <tr id="tr_@item.Id">
+
+
+                                            <td>@item.OrderNumber</td>
+                                            <td>
+                                                @EnumConvertor.GetDisplayName(item.OrderStatus)
+                                            </td>
+                                            <td>@item.DeliveryDate</td>
+                                            <td>@item.CreateDate</td>
+                                            <td>@item.FinalAmount.ToString("##,###") تومان</td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="activity">
+                        <div style="height: 500px" class="publisher publisher-multi bg-white b-1 mb-30">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>نام تحویل گیرنده</th>
+                                        <th>شماره تماس</th>
+                                        <th>ادرس</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.UserAddress)
+                                    {
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td>@item.Mobile</td>
+                                            <td>@item.Address</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="comment">
+                        <div style="height: 500px" class="publisher publisher-multi bg-white b-1 mb-30">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <th>نام محصول</th>
+                                        <th>کامنت</th>
+                                        <th>تاریخ</th>
+                                        <th>وضعیت</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Comments)
+                                    {
+                                        <tr>
+                                            <td>@item.Product.Name</td>
+                                            <td>@item.Description</td>
+                                            <td>@DateTimeConvertor.PersianDateTime(item.CreateDate)</td>
+                                            <td><i id="confrim_@item.Id" class="@(item.IsConfirm ? "ti ti-check" : "ti ti-close") "></i></td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-5 col-xl-4">
+
+            <div class="box box-inverse bg-img" style="background-image: url(../../images/gallery/full/1.jpg);" data-overlay="2">
+
+
+                <div class="box-body text-center pb-50">
+                    <a href="#">
+                        <img class="avatar avatar-xxl avatar-bordered" src="@Model.User.Data.Avatar" alt="">
+                    </a>
+                    <h4 class="mt-2 mb-0">@Model.User.Data.FullName</h4>
+
+                </div>
+
+                <ul class="box-body flexbox flex-justified text-center" data-overlay="4">
+                    <li>
+                        <span class="opacity-60">تعداد سفارشات</span><br>
+                        <span class="font-size-20">@Model.Order.Count</span>
+                    </li>
+                    <li>
+                        <span class="opacity-60">تعداد آدرس ها</span><br>
+                        <span class="font-size-20">@Model.UserAddress.Count</span>
+                    </li>
+                    <li>
+                        <span class="opacity-60"></span>تعداد کامنت<br>
+                        <span class="font-size-20">@Model.Comments.Count</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="box">
+                <div class="box-body box-profile">
+                    <div class="row">
+                        <div class="col-12">
+                            <div>
+                                <p>ایمیل :<span class="text-gray pl-10">@Model.User.Data.Email</span> </p>
+                                <p>تلفن :<span class="text-gray pl-10">@Model.User.Data.PhoneNumber</span></p>
+                                <p>وضعیت :<span class="text-gray pl-10">@EnumConvertor.GetDisplayName(Model.User.Data.Status)</span></p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+@section script
+{
+    <script>
+        $(document).ready(function () {
+
+
+
+
+        });
+    </script>
+}

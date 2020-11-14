@@ -1,0 +1,39 @@
+﻿@model List<OnlineShop.Application.UserAddress.ModelDto.UserAddressDto
+            >
+@{
+    ViewData["Title"] = "آدرس های من";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string url = "myaddress";
+}
+
+<div class="profile container level">
+    @await Component.InvokeAsync("ProfileSideBarComponent", new { url })
+
+    <div class="level-items">
+        <div class="address-container">
+            <h1>آدرس&zwnj;ها</h1>
+            <a asp-action="AddUserAddress" class="add-new-address">
+                <span class="address-icon"></span>
+                افزودن آدرس جدید
+            </a>
+            @foreach (var item in Model)
+            {
+                <div class="address-items" data-id="@item.Id">
+                    <h2 class="address-title">@item.Name</h2>
+                    <span class="address">@item.Address</span>
+                    <div class="details">
+                        <div class="column">
+                            <span>کدپستی : @item.PostalCode</span>
+                            <span>تلفن همراه : @item.Mobile</span>
+                        </div>
+                        <div class="column">
+                            <a asp-action="EditUserAddress" asp-route-id="@item.Id" class="edit-btn">ویرایش</a>
+                            <button type="button" data-id="@item.Id"  class="remove-btn">حذف</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

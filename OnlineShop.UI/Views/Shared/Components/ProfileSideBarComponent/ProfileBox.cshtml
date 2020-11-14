@@ -1,0 +1,40 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Application.Authentication.ModelDto.ProfileSideBarViewModel
+
+
+
+<div class="sidebar-container">
+    <div class="user-picture">
+        <img style="height:@((string.IsNullOrWhiteSpace(Model.User.Data.Avatar)? "auto":"100%")); border-radius: 50%;width: @((string.IsNullOrWhiteSpace(Model.User.Data.Avatar)? "auto":"100%"));object-fit: @((string.IsNullOrWhiteSpace(Model.User.Data.Avatar)? "contain":"cover"))" class="img-responsive" src="@(string.IsNullOrWhiteSpace(Model.User.Data.Avatar)? "/images/placeholder.svg":$"{Model.User.Data.Avatar}")" alt="" />        <span class="upload-btn"></span>
+        <input class="upload-picture" type="file" style="display: none;" />
+    </div>
+    <h2 class="user-fullname">@($"{Model.User.Data.FullName}")</h2>
+    <h4 class="register-date">تاریخ عضویت: @DateTimeConvertor.LongPersianDate(Model.User.Data.RegisterDate)</h4>
+    <div class="row">
+        <a asp-action="ChangePassword" asp-controller="Profile" class="column">
+            تغییر رمز
+            <span class="icon"></span>
+        </a>
+        <a id="logoutBtn"  class="column">
+            خروج از حساب
+            <span class="icon"></span>
+        </a>
+    </div>
+    <ul>
+        <li>
+            <a class="@(Model.Url.ToLower()=="profile"?"active":"")" asp-controller="Profile" asp-action="UserDashboard">داشبورد</a>
+        </li>
+        <li>
+            <a class="@(Model.Url.ToLower()=="editprofile"?"active":"")" asp-controller="Profile" asp-action="Edit">اطلاعات شخصی</a>
+        </li>
+        <li>
+            <a class="@(Model.Url.ToLower()=="myaddress"?"active":"")" asp-controller="Profile" asp-action="MyAddress">آدرس ها</a>
+        </li>
+        <li>
+            <a class="@(Model.Url.ToLower()=="myorderlist"?"active":"")" asp-controller="Profile" asp-action="MyOrderList">سفارشات</a>
+        </li>
+        <li>
+            <a class="@(Model.Url.ToLower()=="mypayment"?"active":"")" asp-controller="Profile" asp-action="MyPayments">پرداخت های من</a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,23 @@
+@model OnlineShop.Common.Result.Result;
+@{
+    ViewData["Title"] = "تایید حساب کاربری";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container email-status">
+    <!-- Successfull -->
+    @if (Model.Success)
+    {
+        <div class="status confirmed">
+            <span class="icon"></span>
+            <p class="description">اکانت شما با موفقیت فعال گردید.</p>
+        </div>
+    }
+    else
+    {
+        <div class="status rejected">
+            <span class="icon"></span>
+            <p class="description">در بررسی مشکلی به وجود آمده است.</p>
+        </div>
+    }
+</div>

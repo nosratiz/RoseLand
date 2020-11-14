@@ -1,0 +1,46 @@
+﻿@using OnlineShop.Application.Common.General
+@using OnlineShop.Common.Helper
+@model Meta
+
+@{
+    var result = BasePaginationViewModel.InitiatePagerViewModel(Model.TotalCount, Model.CurrentPage, Model.PageSize);
+    PagingOptions options = ViewBag.Model;
+    var parameter = new Dictionary<string, string>
+{
+        {"Page", options.Page.ToString()},
+        {"Search" ,options.Search }
+    };
+}
+
+<div class="dataTables_paginate paging_simple_numbers" id="complex_header_paginate">
+    <ul class="pagination">
+        @if (result.TotalPageCount > 1)
+        {
+            parameter["Page"] = (Model.CurrentPage - 1).ToString();
+            <li class="paginate_button page-item previous disabled" id="complex_header_previous">
+                <a asp-action="MenuList" asp-all-route-data="parameter" aria-controls="complex_header" data-dt-idx="0" tabindex="0" class="page-link">قبلی</a>
+            </li>
+            @if (result.EndPage > 1)
+            {
+                for (long pages = result.StartPage; pages <= result.EndPage; pages++)
+                {
+                    parameter["Page"] = (pages).ToString();
+                    <li class="@(pages == Model.CurrentPage ? "paginate_button page-item active" : "paginate_button page-item ")">
+                        <a asp-action="MenuList" asp-all-route-data="parameter" aria-controls="complex_header" data-dt-idx="@pages" tabindex="0" class="page-link">@pages</a>
+                    </li>
+                }
+            }
+
+
+            @if (result.CurrentPage < result.TotalPageCount)
+            {
+                { parameter["Page"] = (result.CurrentPage + 1).ToString(); }
+                <li class="paginate_button page-item next" id="complex_header_next">
+                    <a asp-action="MenuList" asp-all-route-data="parameter" aria-controls="complex_header" data-dt-idx="@result.TotalPageCount+1" tabindex="0" class="page-link">بعدی</a>
+                </li>
+            }
+
+        }
+    </ul>
+
+</div>

@@ -1,0 +1,107 @@
+﻿@model OnlineShop.Application.General.BlogCategory.ModelDto.CreateCategoryDto
+@{
+    ViewData["Title"] = "افزودن دسته بندی";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت دسته بندی</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="BlogCategory" asp-action="BlogCategoryList">لیست دسته بندی</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">افزودن دسته بندی</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="box">
+                <form id="blogcategoryForm">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>نام دسته بندی <span class="text-danger">*</span></h5>
+                                    <div class="controls">
+                                        <input type="text" name="name" onkeyup="Just_persian(this);" id="name" class="form-control">
+                                        <span id="span-name" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label>سردسته</label>
+                                <select name="ParnetId" id="ParnetId" asp-items="@(new SelectList(Model.BlogCategory,"Id","Name"))" class="form-control">
+                                    <option value="">یک سر دسته انتخاب کنید</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>نام پیوند </h5>
+                                    <div class="controls">
+                                        <input type="text" name="slug" id="slug" class="form-control">
+                                        <span id="span-slug" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>توضیحات </h5>
+                                    <div class="controls">
+                                        <textarea name="description"  id="description" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6"></div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <h5>وضیعت دسته بندی </h5>
+                                    <div class="controls">
+                                        <input type="checkbox" id="checkbox_1" checked="false" name="isActive" value="false">
+                                        <label for="checkbox_1">فعال</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="box-footer text-right">
+                                    <a asp-action="BlogCategoryList" type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                        <i class="ti-trash"></i> لغو
+                                    </a>
+                                    <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                        <i class="ti-save-alt"></i> افزودن
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section script
+{
+
+    <script src="~/Admin/js/Validation.js"></script>
+    <script src="~/Admin/js/BlogCategory/BlogCategoryCommand.js"></script>
+
+}

@@ -1,0 +1,73 @@
+﻿@using OnlineShop.Common.Helper
+@model OnlineShop.Common.Result.Result<OnlineShop.Application.Shop.Orders.ModelDto.OrderDto>
+@{
+    ViewData["Title"] = "جزئیات سفارش";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string url = "myorderlist";
+}
+
+<div class="profile container level">
+    @await Component.InvokeAsync("ProfileSideBarComponent", new { url })
+
+    <div class="level-items">
+        <div id="Factor" class="result-container">
+            <h3>شماره فاکتور @Model.Data.OrderNumber</h3>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام محصول</th>
+             
+                    <th>قیمت</th>
+                    <th>تعداد</th>
+                    <th>قیمت نهایی</th>
+                </tr>
+
+                </thead>
+                @{ int rownumber = 1;}
+                <tbody>
+                    @foreach (var item in Model.Data.OrderItems)
+                    {
+                    <tr>
+                        <td>@(rownumber++)</td>
+                        <td>@item.ProductVariant.Product.Name</td>
+                        <td>@item.Price.ToString("##,###") تومان</td>
+                        <td>@item.Count</td>
+                        <td>@((item.Count * item.Price).ToString("##,###")) تومان</td>
+                        
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="order-details">
+                <h5>جمع اقلام خریداری شده</h5>
+                <div class="row">
+                    <div class="cell">
+                        <span class="title">جمع کل</span>
+                    </div>
+                    <div class="cell">
+                        <span id="totalPrice" class="value price">@Model.Data.FinalAmount.ToString("##,###") تومان</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <span class="title">هزینه ارسال</span>
+                    </div>
+                    <div class="cell">
+                        <span class="value">@(Model.Data.ShipmentPrice == 0 ? "رایگان" : $"{Model.Data.ShipmentPrice.ToString("##,###")} ریال") </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <span class="title">زمان تحویل</span>
+                    </div>
+                    <div class="cell">
+                        <span class="value">@Model.Data.DeliveryDate</span>
+                    </div>
+                </div>
+            </div>
+      
+        </div>
+    </div>
+</div>
+

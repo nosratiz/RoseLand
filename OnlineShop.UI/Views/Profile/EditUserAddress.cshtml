@@ -1,0 +1,67 @@
+﻿@model OnlineShop.Common.Result.Result<OnlineShop.Application.UserAddress.ModelDto.UserAddressDto>
+
+@{
+    ViewData["Title"] = "ویرایش آدرس";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string url = "myaddress";
+}
+
+<div class="profile container level">
+    @await Component.InvokeAsync("ProfileSideBarComponent", new { url })
+    <div class="level-items">
+        <div class="address-container">
+            <h1>افزودن آدرس جدید</h1>
+
+            <form id="editAddressForm" novalidate class="address-form">
+                <div class="field">
+                    <p class="control">
+                        <label class="label">نام تحویل گیرنده</label>
+                        <input name="name" class="input" value="@Model.Data.Name" type="text" />
+                    </p>
+                    <p class="help is-danger hide">
+                        نام تحویل گیرنده را به درستی وارد نمایید.
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <label class="label">شماره همراه</label>
+                        <input name="tel" class="input" type="tel" value="@Model.Data.Mobile" maxlength="11" />
+                    </p>
+                    <p class="help is-danger hide">
+                        شماره همراه را به درستی وارد نمایید.
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <label class="label">کد پستی</label>
+                        <input name="postalCode" class="input" value="@Model.Data.PostalCode" type="text" maxlength="10" />
+                    </p>
+                    <p class="help is-danger hide">
+                        کد پستی را به درستی وارد نمایید.
+                    </p>
+                </div>
+
+                <div class="field">
+                    <p class="control">
+                        <label class="label">آدرس</label>
+                        <input id="address" name="adddress" value="@Model.Data.Address" class="input" type="text" />
+                    </p>
+                    <p class="help is-danger hide">
+                        آدرس را به درستی وارد نمایید.
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <label class="label">توضیحات</label>
+                        <textarea rows="6" asp-for="Data.Description" name="description" class="input"></textarea>
+                    </p>
+                </div>
+                <input type="hidden" id="id" name="id" value="@Model.Data.Id" />
+                <button type="submit" class="submit-btn">ویرایش آدرس</button>
+                <button type="button" class="dismiss-btn">انصراف</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,180 @@
+@using Newtonsoft.Json
+@using OnlineShop.Common.Helper
+@model List<OnlineShop.Application.Shop.Cart.ModelDto.BasketShopViewModel>
+
+@{
+    ViewData["Title"] = " سبد خرید-";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="cart-container">
+    <div class="container">
+        <h2>اقلام سبد خرید</h2>
+        @if (Model.Any())
+        {
+
+            <table id="cartTable" class="table">
+                <thead>
+                    <tr>
+                        <th>ردیف</th>
+                        <th style="width: 25%;">تصویر و مشخصات </th>
+                        <th>تعداد</th>
+                        <th class="no-wrap">قیمت واحد</th>
+                        <th class="no-wrap">جمع کل </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int rownumber = 1;}
+                    @foreach (var item in Model)
+                    {
+
+                        <tr id="@item.ProductVariantId" data-id="@item.ProductVariantId">
+                            <td><span class="index">@(rownumber++)</span></td>
+                            <td>
+                                <div class="product-attr">
+                                    <div class="img-container">
+                                        <img src="@item.Image" alt="" />
+                                    </div>
+                                    <div class="item-title">
+                                        <div class="item-title-name">
+                                            <span class="no-wrap">@item.Name</span>
+                                        </div>
+                                        <div class="item-title-attr">
+                                            <div class="attr-content">
+                                                <span>@EnumConvertor.GetDisplayName(item.BoxType)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="stepper-container">
+                                    <div class="stepper-minus"></div>
+                                    <div class="stepper-value">
+                                        <input type="number" class="form-input" value="@item.Count" />
+                                    </div>
+                                    <div class="stepper-plus"></div>
+                                </div>
+                            </td>
+                            <td class="no-wrap">@item.Price.ToString("##,###") تومان </td>
+                            <td class="no-wrap">@((item.Count * item.Price).ToString("##,###")) تومان </td>
+
+                            <td>
+                                <div class="remove-product"></div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="total-invoice">
+                <h4>جمع اقلام خریداری شده</h4>
+                <span>@(Model.Sum(x=>x.Count * x.Price).ToString("##,###")) تومان</span>
+            </div>
+
+            <a asp-controller="Order" asp-action="MyOrder" class="submit-btn">
+                ادامه خرید
+            </a>
+        }
+        else
+        {
+            <div class="empty-list">
+                <span>سبد خرید شما خالی است.</span>
+            </div>
+        }
+
+
+
+
+    </div>
+</div>
+
+
+
+
+@section Scripts
+{
+    <script>
+
+        @{ string items = "[]";}
+        @if (Model.Any()) {
+             items = JsonConvert.SerializeObject(Model.ToArray());
+        }
+
+        var items = @Html.Raw(items);
+        $("#cartTable").on("click",
+            ".stepper-minus",
+            function (e) {
+                var id = $(this).closest("tr").attr("data-id");
+                var value = $(this).closest("tr").find(".stepper-value input").val();
+                if (value > 1) {
+                    $(this).closest("tr").find(".stepper-value input").val(Number(value) - 1);
+                    updateItemCount(id, Number(value) - 1);
+                }
+            });
+
+        $("#cartTable").on("click",
+            ".stepper-plus",
+            function (e) {
+                var id = $(this).closest("tr").attr("data-id");
+                var value = $(this).closest("tr").find(".stepper-value input").val();
+                $(this).closest("tr").find(".stepper-value input").val(Number(value) + 1);
+                updateItemCount(id, Number(value) + 1);
+            });
+
+        $("#cartTable").on("keyup",
+            ".stepper-value input",
+            function (e) {
+                var id = $(this).closest("tr").attr("data-id");
+                updateItemCount(id, $(this).val());
+            });
+
+        function updateItemCount(id, count) {
+            var customDate = JSON.stringify({
+                productVariantId: parseInt(id),
+                count: count
+            });
+            $.ajax({
+                url: "/site/addToCart/",
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                data:customDate
+            }).done(data => {
+
+                $("#basketCount").html(data.basketCount);
+
+                $("#basketprice").html(`${data.totalPrice.toLocaleString()} تومان`);
+                $.toast({
+                    heading: 'محصول مورد نظردر سبد خرید شما ویرایش شد',
+                    text: '',
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
+                    icon: 'success',
+                    hideAfter: 2000,
+                    stack: 6
+                });
+                items.forEach(function (item) {
+                    if (item.ProductVariantId === Number(id)) {
+                        $("#" + id)[0].cells[4].textContent = (item.Price * count).toLocaleString() + "  تومان";
+                    }
+                });
+                $(".total-invoice span").text(data.totalPrice.toLocaleString() + "تومان");
+
+            }).fail(err => {
+                $.toast({
+                    heading: 'خطا',
+                    text: !error.responseJSON ? "در ارسال پیام شما مشکلی به وجود آمده است." : error.responseJSON.message,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
+                    icon: 'error',
+                    hideAfter: 3500,
+                });
+            });
+        }
+
+    </script>
+}

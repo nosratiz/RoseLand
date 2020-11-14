@@ -1,0 +1,151 @@
+﻿@model OnlineShop.Application.Users.Command.CreateUser.CreateUserCommand
+@{
+    ViewData["Title"] = "افزودن کاربر";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<div class="d-flex align-items-center">
+    <div class="mr-auto">
+        <h3 class="page-title">مدیریت کاربران</h3>
+        <div class="d-inline-block align-items-center">
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index"><i class="mdi mdi-home-outline"></i></a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page"><a asp-controller="User" asp-action="Index">لیست کاربران</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">افزودن کاربر</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<section class="content">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="box">
+
+                <div class="box-header with-border">
+                    <form id="userForm">
+                        <div class="box-body">
+                            <h4 class="box-title text-info"><i class="ti-user mr-15"></i> اطلاعات کاربری</h4>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <input type="text" name="name" id="name"  onkeyup="Just_persian(this);" class="form-control" placeholder="نام ">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="ti-user"></i></span>
+                                            </div>
+                                        </div>
+                                        <span id="span-name" class="help-block"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+
+                                        <div class="input-group mb-3">
+                                            <input type="text" name="family" id="family" onkeyup="Just_persian(this);" class="form-control" placeholder="نام خانوادگی">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="ti-user"></i></span>
+                                            </div>
+                                        </div>
+                                        <span id="span-family" class="help-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+
+                                        <div class="input-group mb-3">
+                                            <input type="password" name="password" id="password" onkeyup="MinLengthVal(this, 6);" class="form-control" placeholder="رمز عبور">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="ti-lock"></i></span>
+                                            </div>
+                                        </div>
+                                        <span class="help-block" id="span-password"></span>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+
+                                        <div class="input-group mb-3">
+                                            <input type="password" name="confirmpassword" onkeyup="ComparePassword(this);" id="confirmpassword" class="form-control" placeholder="تایید رمز عبور">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="ti-lock"></i></span>
+                                            </div>
+
+                                        </div>
+                                        <span class="help-block" id="span-confirmpassword"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <input type="text" name="email" id="email" onkeyup="ValidEmailVal(this);" class="form-control" placeholder="ایمیل">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="ti-email"></i></span>
+                                            </div>
+                                        </div>
+                                        <span class="help-block" id="span-email"></span>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <input type="text" name="phonenumber" id="phonenumber" onkeyup="ValidPhoneNumber(this);" class="form-control" placeholder="شماره همراه">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="ti-mobile"></i></span>
+                                            </div>
+                                        </div>
+                                        <span class="help-block" id="span-phonenumber"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <label>سطح دسترسی</label>
+                                    <select asp-for="RoleId" class="form-control">
+                                        <option value="1">Admin</option>
+                                        <option value="2">User</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="box-footer text-right">
+                                        <a asp-action="Index" type="button" class="btn btn-rounded btn-warning btn-outline mr-1">
+                                            <i class="ti-trash"></i> لغو
+                                        </a>
+                                        <button type="submit" class="btn btn-rounded btn-primary btn-outline">
+                                            <i class="ti-save-alt"></i> افزودن
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section script
+{
+    <script src="~/Admin/js/Validation.js"></script>
+    <script src="~/Admin/js/User/UserCommand.js">
+    </script>
+
+}

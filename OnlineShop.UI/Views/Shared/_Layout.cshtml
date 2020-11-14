@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html class="no-js" lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] فروشگاه اینترنتی رزلند</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="apple-touch-icon" href="icon.png" />
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/bulma.min.css" />
+    <link rel="stylesheet" href="/css/animate.css" />
+    <link rel="stylesheet" href="/css/swiper.min.css" />
+		<link rel="stylesheet" href="/css/ion.rangeSlider.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link href="~/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css" rel="stylesheet">
+
+    <meta name="theme-color" content="#f78fb3" />
+    <script type="text/javascript">!function(){function t(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,localStorage.getItem("rayToken")?t.src="https://app.raychat.io/scripts/js/"+o+"?rid="+localStorage.getItem("rayToken")+"&href="+window.location.href:t.src="https://app.raychat.io/scripts/js/"+o;var e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(t,e)}var e=document,a=window,o="1155de23-6bb1-4fdc-a282-601bfe0cae6d";"complete"==e.readyState?t():a.attachEvent?a.attachEvent("onload",t):a.addEventListener("load",t,!1)}();</script>
+</head>
+
+<body class="inner-page">
+    <!--[if IE]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+    <!-- Header -->
+    <header>
+        <div class="container level welcome-container">
+            <div class="level-right"><span class="welcome-text">به فروشگاه رز لند خوش آمدید.</span></div>
+            <div class="level-left">
+                <div class="menu-btn"></div>
+                <div id="searchContainer">
+                    <input class="input" type="text" placeholder="متن مورد نظر را تایپ کنید" />
+                    <div class="search-result"></div>
+                </div>
+                <span class="user-icon"></span>
+                <a href="@(User.Identity.IsAuthenticated? Url.Action("UserDashboard", "Profile" ) :
+                    Url.Action("SignIn", "Home" ))" id="profileBtn" class="profile-text">@(User.Identity.IsAuthenticated
+                    ? User.Identity.Name : "ورود کاربران")</a>
+                <div id="searchIcon" class="search-icon"></div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("MenuComponent")
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    @await Component.InvokeAsync("FooterComponent")
+    <script src="/js/vendor/modernizr-3.8.0.min.js"></script>
+    <script src="~/js/vendor/jquery-3.4.1.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="~/js/vendor/jquery-3.4.1.min.js"><\/script>');
+    </script>
+    <script src="~/js/plugins.js"></script>
+    <script src="~/js/swiper.min.js"></script>
+    <script src="~/js/ion.rangeSlider.min.js"></script>
+    <script src="~/js/main.js"></script>
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJjpRyCCYEXaG7ZuLDFJJkQr6OGw9L5CM&callback=initMap&libraries=&v=weekly" defer></script>
+    <script src="~/assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js"></script>
+    @await RenderSectionAsync("Scripts", false)
+</body>
+
+</html>
